@@ -41,7 +41,7 @@ export const binaryOperationPattern =
 
 const identity = (value: unknown) => value;
 
-export const getHead: GetValue = arrayLike =>
+export const getOnlyItem: GetValue = arrayLike =>
   (arrayLike as ArrayLike<unknown>)[0];
 
 export const getHeadAndTail: GetValue = iterable => {
@@ -89,7 +89,7 @@ export const getMatcher = (pattern: Pattern, value?: unknown): Matcher => {
     case matchHelpers.matches(anyPattern)(pattern):
       return [matchHelpers.isAny(), identity];
     case matchHelpers.matches(headPattern)(pattern):
-      return [matchHelpers.hasMinLength(1) as Compare, getHead];
+      return [matchHelpers.hasLength(1) as Compare, getOnlyItem];
     case matchHelpers.matches(headAndTailPattern)(pattern):
       return [matchHelpers.hasMinLength(1) as Compare, getHeadAndTail];
     case matchHelpers.matches(lastPattern)(pattern):

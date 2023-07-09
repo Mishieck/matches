@@ -60,11 +60,11 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
 
   describe('Value Getters', it => {
     it('should get head of array-like collection', expect => {
-      expect(helpers.getHead([1, 2]), toEqual(1));
-      expect(helpers.getHead([1]), toEqual(1));
-      expect(helpers.getHead('match'), toEqual('m'));
-      expect(helpers.getHead('m'), toEqual('m'));
-      expect(helpers.getHead(['match', 'pattern']), toEqual('match'));
+      expect(helpers.getOnlyItem([1]), toEqual(1));
+      expect(helpers.getOnlyItem([1]), toEqual(1));
+      expect(helpers.getOnlyItem('match'), toEqual('m'));
+      expect(helpers.getOnlyItem('m'), toEqual('m'));
+      expect(helpers.getOnlyItem(['match', 'pattern']), toEqual('match'));
     });
 
     it('should get head of iterables', expect => {
@@ -175,12 +175,12 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(getAny(1), toEqual(1));
     });
 
-    it('should get head matcher', expect => {
-      const arr = [1, 2];
-      const [hasMinLength1, getHead] = helpers.getMatcher('[head]');
-      expect(hasMinLength1(arr), toEqual(true));
-      expect(getHead(arr), toEqual(1));
-      expect(getHead(arr), not(toEqual(2)));
+    it('should get only item matcher', expect => {
+      const arr = [1];
+      const [hasLength1, getOnlyItem] = helpers.getMatcher('[head]');
+      expect(hasLength1(arr), toEqual(true));
+      expect(getOnlyItem(arr), toEqual(1));
+      expect(getOnlyItem(arr), not(toEqual(2)));
     });
 
     it('should get head and tail matcher', expect => {
