@@ -31,7 +31,6 @@ export const runMatch: ModuleRunner = describe => {
     });
 
     it('should pick the first match', expect => {
-      const identity = (value: unknown) => value;
       const multiplyBy = (factor: number) => (value: number) => factor * value;
 
       const entries: Array<Entry> = [
