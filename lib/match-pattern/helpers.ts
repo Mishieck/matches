@@ -31,6 +31,7 @@ type Matcher = [Compare, GetValue];
 export type PatternEntry = [Pattern, CallableFunction];
 
 export const anyPattern = /^_$/;
+export const emptyPattern = /^\[\]$/;
 export const headPattern = /^\[([_a-zA-Z$][\w$]*)\]$/;
 export const headAndTailPattern =
   /^\[([_a-zA-Z$][\w$]+),\s+\.\.\.([_a-zA-Z$][\w$]*)\]$/;
@@ -92,6 +93,8 @@ export const getMatcher = (pattern: Pattern, value?: unknown): Matcher => {
       ];
     case matchHelpers.matches(anyPattern)(pattern):
       return [matchHelpers.isAny(), identity];
+    case matchHelpers.matches(emptyPattern)(pattern):
+      return [matchHelpers.hasLength(0) as Compare, identity];
     case matchHelpers.matches(headPattern)(pattern):
       return [matchHelpers.hasLength(1) as Compare, getOnlyItem];
     case matchHelpers.matches(headAndTailPattern)(pattern):

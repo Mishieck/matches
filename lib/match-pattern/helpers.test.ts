@@ -10,6 +10,11 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('a_1', not(toMatch(helpers.anyPattern)));
     });
 
+    it('should match empty pattern', expect => {
+      expect('[]', toMatch(helpers.emptyPattern));
+      expect('[_]', not(toMatch(helpers.emptyPattern)));
+    });
+
     it('should match head pattern', expect => {
       expect('[_]', toMatch(helpers.headPattern));
       expect('[head]', toMatch(helpers.headPattern));
@@ -67,7 +72,7 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(helpers.getOnlyItem(['match', 'pattern']), toEqual('match'));
     });
 
-    it('should get head of iterables', expect => {
+    it('should get head and tail of iterables', expect => {
       expect(helpers.getHeadAndTail([1, 2]), toEqual([1, [2]]));
       expect(helpers.getHeadAndTail([1]), toEqual([1, []]));
       expect(helpers.getHeadAndTail('match'), toEqual(['m', 'atch']));
@@ -173,6 +178,14 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(isAny(null), toEqual(true));
       expect(isAny(undefined), toEqual(true));
       expect(getAny(1), toEqual(1));
+    });
+
+    it('should get empty matcher', expect => {
+      const [hasLength0] = helpers.getMatcher('[]');
+      expect(hasLength0([]), toEqual(true));
+      expect(hasLength0(''), toEqual(true));
+      expect(hasLength0([1]), not(toEqual(true)));
+      expect(hasLength0('m'), not(toEqual(true)));
     });
 
     it('should get only item matcher', expect => {
