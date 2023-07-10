@@ -83,9 +83,13 @@ export const getBinaryOpComparator = (
 };
 
 export const getMatcher = (pattern: Pattern, value?: unknown): Matcher => {
+  console.log(value);
   switch (true) {
     case matchHelpers.matches(literalPattern)(pattern):
-      return [matchHelpers.equals(value) as Compare, identity];
+      return [
+        matchHelpers.equals(getPatternValue(pattern)) as Compare,
+        identity
+      ];
     case matchHelpers.matches(anyPattern)(pattern):
       return [matchHelpers.isAny(), identity];
     case matchHelpers.matches(headPattern)(pattern):
