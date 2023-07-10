@@ -1,6 +1,7 @@
 import { mod, toEqual, type ModuleRunner, toBeInstanceOf } from '../../deps.ts';
 import type { Compare } from './match.types.ts';
-import match from './match.ts';
+import * as helpers from './helpers.ts';
+import match, { type Entry } from './match.ts';
 
 export const runMatch: ModuleRunner = describe => {
   describe('match', it => {
@@ -27,6 +28,21 @@ export const runMatch: ModuleRunner = describe => {
         toBeInstanceOf(Error)
       );
       expect(value, toEqual(1));
+    });
+
+    it('should pick the first match', expect => {
+      const identity = (value: unknown) => value;
+      const multiplyBy = (factor: number) => (value: number) => factor * value;
+
+      const entries: Array<Entry> = [
+        [helpers.isLessThan(1) as Compare, multiplyBy(0)],
+        [helpers.equals(1) as Compare, multiplyBy(1)],
+        [helpers.isGreaterThan(1) as Compare, multiplyBy(2)]
+      ];
+
+      expect(match(0)(...entries), toEqual(0));
+      expect(match(1)(...entries), toEqual(1));
+      expect(match(2)(...entries), toEqual(4));
     });
   });
 };
