@@ -46,11 +46,11 @@ export const runMatch: ModuleRunner = describe => {
 
     it('should be used recursively to add numbers in an array', expect => {
       const sum = (numbers: Array<number>) =>
-        match(numbers)(
+        match<number>(numbers)(
           [helpers.hasLength(0) as Compare, () => 0],
           [
             helpers.hasMinLength(1) as Compare,
-            (arr: Array<number>) => arr[0] + sum(arr.slice(1))
+            (arr: Array<number>) => arr[0] + (sum(arr.slice(1)) as number)
           ]
         );
 

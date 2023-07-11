@@ -1,6 +1,7 @@
 import type { Compare } from './match.types.ts';
 
 export type Entry = [Compare | Array<Compare>, CallableFunction];
+export type MatchResult<Result = unknown> = Result | Error;
 
 /**
  * Matches a value against conditions and executes the function related to the
@@ -31,11 +32,11 @@ export type Entry = [Compare | Array<Compare>, CallableFunction];
  * ```
  * @example
  * ```ts
- * const sum = (numbers: Array<number>) => match(numbers)(
+ * const sum = (numbers: Array<number>) => match<number>(numbers)(
  *     [hasLength(0) as Compare, () => 0],
  *     [
  *       hasMinLength(1) as Compare,
- *       (arr: Array<number>) => arr[0] + sum(arr.slice(1))
+ *       (arr: Array<number>) => arr[0] + (sum(arr.slice(1) as number))
  *     ]
  *   );
  *
@@ -44,8 +45,8 @@ export type Entry = [Compare | Array<Compare>, CallableFunction];
  * ```
  */
 const match =
-  (value: unknown) =>
-  (...entries: Array<Entry>) => {
+  <Result = unknown>(value: unknown) =>
+  (...entries: Array<Entry>): MatchResult<Result> => {
     for (const [isMatch, handleMatch] of entries) {
       const matches =
         typeof isMatch === 'function'
