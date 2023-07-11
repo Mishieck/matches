@@ -15,9 +15,9 @@ export type MatchResult<Result = unknown> = Result | Error;
  *   functions that check the value against a particular condition. The second
  *   value is the function to be executed if the related check passes. The
  *   function (second value) takes the value passed to `match` as an argument
- *   and returns any type of value. The return value of `match` is the value
- *   returned by the executed function. If no match is found, an Error is
- *   returned.
+ *   and returns any type of value. The return value (of the function returned
+ *   by `match`) is the value returned by the executed function. If no match is
+ *   found, an Error is returned.
  * @example
  * ```ts
  * const value = 300;
