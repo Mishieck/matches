@@ -83,8 +83,7 @@ export const getBinaryOpComparator = (
   return binaryOps[operator](value);
 };
 
-export const getMatcher = (pattern: Pattern, value?: unknown): Matcher => {
-  console.log(value);
+export const getMatcher = (pattern: Pattern): Matcher => {
   switch (true) {
     case matchHelpers.matches(literalPattern)(pattern):
       return [

@@ -6,7 +6,7 @@ const matchPattern =
   (...entries: Array<PatternEntry>) =>
     match(value)(
       ...entries.map(([pattern, handle]) => {
-        const [isMatch, getValue] = getMatcher(pattern, value);
+        const [isMatch, getValue] = getMatcher(pattern);
         console.log({ pattern, isMatch, getValue });
         return [isMatch, (value: unknown) => handle(getValue(value))] as Entry;
       })
