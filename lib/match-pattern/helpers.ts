@@ -84,6 +84,33 @@ export const getBinaryOpComparator = (
   return binaryOps[operator](value);
 };
 
+/**
+ * Gets utility functions for matching and extracting values from a given value.
+ *
+ * @param pattern - The string that represents a pattern to be matched against.
+ * @returns an array with two functions. The first function takes a value and
+ *   performs some comparison according to the `pattern`. The second value
+ *   takes a value and returns, extracts or converts it to another value
+ *   according to the `pattern`.
+ * @example
+ * ```ts
+ * const numberLiteral = '1';
+ * const [equals1, identity] = getMatcher(numberLiteral);
+ * console.log(equals1(1)); // true
+ * console.log(equals1(0)); // false
+ * console.log(identity(1)); // 1
+ * console.log(identity(0)); // 0
+ * ```
+ * @example
+ * ```ts
+ * const headAndTailPattern = '[head, ...tail]';
+ * const [hasMinLength1, getHeadAndTail] = getMatcher(headAndTailPattern);
+ * console.log(hasMinLength1([1, 2])); // true
+ * console.log(hasMinLength1([])); // false
+ * console.log(getHeadAndTail([1, 2])); // [1, [2]]
+ * console.log(getHeadAndTail([1])); // [1, []]
+ * ```
+ */
 export const getMatcher = (pattern: Pattern): Matcher => {
   switch (true) {
     case matchHelpers.matches(literalPattern)(pattern):
