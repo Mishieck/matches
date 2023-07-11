@@ -37,9 +37,9 @@ export const headPattern = /^\[([_a-zA-Z$][\w$]*)\]$/;
 export const headAndTailPattern =
   /^\[([_a-zA-Z$][\w$]+),\s+\.\.\.([_a-zA-Z$][\w$]*)\]$/;
 export const lastPattern = /^\[\.\.\._,\s+([_a-zA-Z$][\w$]*)\]$/;
-export const literalPattern = /(^['"].*['"]$|^\d+$|^\d+n$)/;
+export const literalPattern = /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$)/;
 export const binaryOperationPattern =
-  /(^[_a-zA-Z$][\w$]*)\s([<>]|<=|>=|==|===|!=)\s(['"].*['"]|\d+n|\d+)/;
+  /(^[_a-zA-Z$][\w$]*)\s([<>]|<=|>=|==|===|!=)\s(['"].*['"]|\-?\d+n|\-?\d+)/;
 
 const identity = (value: unknown) => value;
 
