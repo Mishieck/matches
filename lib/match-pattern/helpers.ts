@@ -41,25 +41,94 @@ export const literalPattern = /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$)/;
 export const binaryOperationPattern =
   /(^[_a-zA-Z$][\w$]*)\s([<>]|<=|>=|==|===|!=)\s(['"].*['"]|\-?\d+n|\-?\d+)/;
 
+/**
+ * Returns the argument passed to it.
+ *
+ * @param value - The value to be returned.
+ * @returns the `value` passed in as an argument.
+ * @example
+ * ```ts
+ * console.log(identity(1)); // 1
+ * ```
+ */
 const identity = (value: unknown) => value;
 
+/**
+ * Gets the item in an `ArrayLike` collection with only one item.
+ *
+ * @param arrayLike - An `ArrayLike` collection.
+ * @returns the item in `arrayLike`.
+ * @example
+ * ```ts
+ * console.log(getOnlyItem([1])); // 1
+ * ```
+ */
 export const getOnlyItem: GetValue = arrayLike =>
   (arrayLike as ArrayLike<unknown>)[0];
 
+/**
+ * Gets the head and tail of an `Iterable`.
+ *
+ * @param iterable - An `Iterable`.
+ * @returns an array where the first item is the first element of the
+ *   `iterable` and the second element is the rest of the iterable.
+ * @example
+ * ```ts
+ * console.log(getHeadAndTail([1, 2])); // [1, [2]]
+ * console.log(getHeadAndTail([1])); // [1, []]
+ * console.log(getHeadAndTail('match')); // ['m', 'atch']
+ * ```
+ */
 export const getHeadAndTail: GetValue = iterable => {
   if (typeof iterable === 'string') return [iterable[0], iterable.substring(1)];
   const [head, ...tail] = iterable as Iterable<unknown>;
   return [head, tail];
 };
 
+/**
+ * Gets the last element in an `ArrayLike` collection.
+ *
+ * @param arrayLike - An `ArrayLike` collection.
+ * @returns the last element in `arrayLike`.
+ * @example
+ * ```ts
+ * console.log(getLast([1, 2])); // 2
+ * console.log(getLast([1])); // 1
+ * console.log(getLast('match')); // 'h'
+ * ```
+ */
 export const getLast: GetValue = arrayLike => {
   const al = arrayLike as ArrayLike<unknown>;
   return al[al.length - 1];
 };
 
+/**
+ * Gets the parts of a string that matches the groups in a regex.
+ *
+ * @param pattern - A string to match.
+ * @param regex - A regex to match against. The regex must contain groups.
+ * @returns An array that contains all the matches.
+ * @example
+ * ```ts
+ * const regex = /(\d+)/;
+ * console.log(getMatches('1', regex)); // ['1']
+ * ```
+ */
 export const getMatches = (pattern: string, regex: RegExp) =>
   (pattern.match(regex) || []).slice(1);
 
+/**
+ * Gets the value from a literal pattern.
+ *
+ * @param value - A string pattern.
+ * @returns A value of the pattern.
+ * @example
+ * ```ts
+ * console.log(getPatternValue('1')); // 1
+ * console.log(getPatternValue('1n')); // 1n
+ * console.log(getPatternValue('"match"')); // 'match'
+ * ```
+ */
 export const getPatternValue = (value: string) => {
   const func = new Function(`return ${value};`);
   return func();
