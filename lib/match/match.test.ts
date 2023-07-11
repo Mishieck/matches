@@ -43,6 +43,19 @@ export const runMatch: ModuleRunner = describe => {
       expect(match(1)(...entries), toEqual(1));
       expect(match(2)(...entries), toEqual(4));
     });
+
+    it('should be used recursively to add numbers in an array', expect => {
+      const sum = (numbers: Array<number>) =>
+        match(numbers)(
+          [helpers.hasLength(0) as Compare, () => 0],
+          [
+            helpers.hasMinLength(1) as Compare,
+            (arr: Array<number>) => arr[0] + sum(arr.slice(1))
+          ]
+        );
+
+      expect(sum([1, 2, 3]), toEqual(6));
+    });
   });
 };
 
