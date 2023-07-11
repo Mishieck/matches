@@ -20,15 +20,15 @@ export type MatchResult<Result = unknown> = Result | Error;
  *   returned.
  * @example
  * ```ts
- * const value = 3;
+ * const value = 300;
  *
- * const increment = match(value)(
- *   [isLessThan(0) as Compare, () => -1],
- *   [equals(0) as Compare, () => 0],
- *   [isGreaterThan(0) as Compare, () => 1]
+ * const clampedValue = match(value)(
+ *   [isLessThan(0) as Compare, () => 0],
+ *   [isGreaterThan(255) as Compare, () => 255],
+ *   [isNumber(0) as Compare, (value: number) => value]
  * );
  *
- * console.log(increment) // 1
+ * console.log(clampedValue) // 255
  * ```
  * @example
  * ```ts
