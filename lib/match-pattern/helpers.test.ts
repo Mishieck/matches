@@ -153,9 +153,9 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
 
   describe('getMatcher', it => {
     it('should get literal matcher', expect => {
-      const [equals1, get1] = helpers.getMatcher('1', 1);
-      const [equals1n, get1n] = helpers.getMatcher('1n', 1n);
-      const [equalsMatch, getMatch] = helpers.getMatcher('"match"', 'match');
+      const [equals1, get1] = helpers.getMatcher('1');
+      const [equals1n, get1n] = helpers.getMatcher('1n');
+      const [equalsMatch, getMatch] = helpers.getMatcher('"match"');
       expect(equals1(1), toEqual(true));
       expect(equals1(2), toEqual(false));
       expect(get1(1), toEqual(1));
