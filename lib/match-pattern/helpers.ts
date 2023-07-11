@@ -2,20 +2,29 @@ import * as matchHelpers from '../match/helpers.ts';
 import type { IsMatch, IsMatchSame, Inequable } from '../match/helpers.ts';
 import type { Compare } from '../match/match.types.ts';
 
-type EmptyPattern = '';
-type AnyPattern = '_';
-type IdentifierPattern = `${'_' | string}${string | ''}`;
-type HeadPattern = `[${IdentifierPattern}]`;
-type HeadAndTailPattern = `[${IdentifierPattern}, ...${IdentifierPattern}]`;
-type LastPattern = `[...${AnyPattern}, ${IdentifierPattern}]`;
-type LastAndRestPattern = `[...${IdentifierPattern}, ${IdentifierPattern}]`;
-type LiteralPattern = `${string | number}`;
-type OperandPattern = LiteralPattern | IdentifierPattern;
-type ComparisonOperatorPattern = '==' | '===' | '!=' | '<' | '<=' | '>' | '>=';
-type BinaryOperationPattern =
+export type EmptyPattern = '';
+export type AnyPattern = '_';
+export type IdentifierPattern = `${'_' | string}${string | ''}`;
+export type HeadPattern = `[${IdentifierPattern}]`;
+export type HeadAndTailPattern =
+  `[${IdentifierPattern}, ...${IdentifierPattern}]`;
+export type LastPattern = `[...${AnyPattern}, ${IdentifierPattern}]`;
+export type LastAndRestPattern =
+  `[...${IdentifierPattern}, ${IdentifierPattern}]`;
+export type LiteralPattern = `${string | number}`;
+export type OperandPattern = LiteralPattern | IdentifierPattern;
+export type ComparisonOperatorPattern =
+  | '=='
+  | '==='
+  | '!='
+  | '<'
+  | '<='
+  | '>'
+  | '>=';
+export type BinaryOperationPattern =
   `${OperandPattern} ${ComparisonOperatorPattern} ${OperandPattern}`;
 
-type Pattern =
+export type Pattern =
   | EmptyPattern
   | AnyPattern
   | HeadPattern
@@ -26,8 +35,8 @@ type Pattern =
   | IdentifierPattern
   | BinaryOperationPattern;
 
-type GetValue = (value: unknown) => unknown;
-type Matcher = [Compare, GetValue];
+export type GetValue = (value: unknown) => unknown;
+export type Matcher = [Compare, GetValue];
 export type HeadAndTail<Item> = [Item, Array<Item>];
 export type PatternEntry = [Pattern, CallableFunction];
 
