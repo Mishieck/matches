@@ -1,5 +1,5 @@
 import { mod, toEqual, type ModuleRunner, toBeInstanceOf } from '../../deps.ts';
-import type { PatternEntry } from './helpers.ts';
+import type { PatternEntry, HeadAndTail } from './helpers.ts';
 import matchPattern from './match-pattern.ts';
 
 export const runMatch: ModuleRunner = describe => {
@@ -83,6 +83,19 @@ export const runMatch: ModuleRunner = describe => {
       );
 
       expect(matchPattern('')(...entries), toEqual('Matched any '));
+    });
+
+    it('should sum all values in an array using recursion', expect => {
+      const sum = (numbers: Array<number>) =>
+        matchPattern<number>(numbers)(
+          ['[]', () => 0],
+          [
+            '[head, ...tail]',
+            ([head, tail]: HeadAndTail<number>) => head + (sum(tail) as number)
+          ]
+        );
+
+      expect(sum([1, 2, 3]), toEqual(6));
     });
   });
 };
