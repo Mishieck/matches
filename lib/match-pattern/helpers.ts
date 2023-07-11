@@ -28,6 +28,7 @@ type Pattern =
 
 type GetValue = (value: unknown) => unknown;
 type Matcher = [Compare, GetValue];
+export type HeadAndTail<Item> = [Item, Array<Item>];
 export type PatternEntry = [Pattern, CallableFunction];
 
 export const anyPattern = /^_$/;
