@@ -44,7 +44,7 @@ const matchPattern =
     match<Result>(value)(
       ...entries.map(([pattern, handle]) => {
         const [isMatch, getValue] = getMatcher(pattern);
-        console.log({ pattern, isMatch, getValue });
+        // console.log({ pattern, isMatch, getValue });
         return [isMatch, (value: unknown) => handle(getValue(value))] as Entry;
       })
     );

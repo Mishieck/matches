@@ -78,9 +78,9 @@ export const getBinaryOpComparator = (
   pattern: string
 ): Compare | Compare<Inequable> => {
   const [_, operator, second] = getMatches(pattern, binaryOperationPattern);
-  console.log({ second });
+  // console.log({ second });
   const value = getPatternValue(second);
-  console.log({ value });
+  // console.log({ value });
   return binaryOps[operator](value);
 };
 
