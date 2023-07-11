@@ -43,6 +43,18 @@ export type MatchResult<Result = unknown> = Result | Error;
  * const total = sum([1, 2, 3]);
  * console.log(total) // 6
  * ```
+ * @example
+ * ```ts
+ * const state = 'info';
+ *
+ * const color = match(state)(
+ *   [equals('danger'), () => 'red'],
+ *   [equals('success'), () => 'green'],
+ *   [equals('warning'), () => 'yellow']
+ * );
+ *
+ * console.log(color) // Error: no match found for value info.
+ * ```
  */
 const match =
   <Result = unknown>(value: unknown) =>
