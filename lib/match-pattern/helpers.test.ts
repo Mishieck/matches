@@ -92,6 +92,19 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
         helpers.getHeadAndTail(['match', 'pattern']),
         toEqual(['match', ['pattern']])
       );
+      expect(
+        helpers.getHeadAndTail(new Set([1, 2])),
+        toEqual([1, new Set([2])])
+      );
+      expect(
+        helpers.getHeadAndTail(
+          new Map([
+            [1, 1],
+            [2, 2]
+          ])
+        ),
+        toEqual([[1, 1], new Map([[2, 2]])])
+      );
     });
 
     it('should get the last element of array-like collection', expect => {

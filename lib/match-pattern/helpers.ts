@@ -86,7 +86,11 @@ export const getOnlyItem: GetValue = arrayLike =>
 /**
  * Gets the head and tail of an `Iterable`.
  *
- * @param iterable - An `Iterable`.
+ * @param iterable - An `Iterable`. If the iterable is not an array or string,
+ *   its constructor must be able to accept an array as an argument. This is
+ *   necessary to construct the tail using the same type as the original
+ *   iterable. Examples of such iterables include, `Set`, `Map`, and
+ *   `Uint8Array`.
  * @returns an array where the first item is the first element of the
  *   `iterable` and the second element is the rest of the iterable.
  * @example
@@ -96,10 +100,25 @@ export const getOnlyItem: GetValue = arrayLike =>
  * console.log(getHeadAndTail('match')); // ['m', 'atch']
  * ```
  */
-export const getHeadAndTail: GetValue = iterable => {
-  if (typeof iterable === 'string') return [iterable[0], iterable.substring(1)];
-  const [head, ...tail] = iterable as Iterable<unknown>;
-  return [head, tail];
+export const getHeadAndTail: GetValue<Iterable<unknown>> = iterable => {
+  switch (true) {
+    case typeof iterable === 'string': {
+      const str = iterable as string;
+      return [str[0], str.substring(1)];
+    }
+    case Array.isArray(iterable): {
+      const arr = iterable as Array<unknown>;
+      return [arr[0], arr.slice(1)];
+    }
+    default: {
+      const arr = [...iterable];
+
+      return [
+        arr[0],
+        new (iterable.constructor as IterableConstructor)(arr.slice(1))
+      ];
+    }
+  }
 };
 
 /**
@@ -235,13 +254,16 @@ export const getMatcher = (pattern: Pattern): Matcher => {
     case matchHelpers.matches(headPattern)(pattern):
       return [matchHelpers.hasLength(1) as Compare, getOnlyItem];
     case matchHelpers.matches(headAndTailPattern)(pattern):
-      return [matchHelpers.hasMinLength(1) as Compare, getHeadAndTail];
+      return [
+        matchHelpers.hasMinLength(1) as Compare,
+        getHeadAndTail as GetValue
+      ];
     case matchHelpers.matches(lastPattern)(pattern):
       return [matchHelpers.hasMinLength(1) as Compare, getLast];
     case matchHelpers.matches(lastAndRestPattern)(pattern):
       return [
         matchHelpers.hasMinLength(1) as Compare,
-        getLastAndRest as Compare
+        getLastAndRest as GetValue
       ];
     case matchHelpers.matches(binaryOperationPattern)(pattern):
       return [getBinaryOpComparator(pattern) as Compare, identity];
