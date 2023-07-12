@@ -138,6 +138,24 @@ export const getLast: GetValue = arrayLike => {
   return al[al.length - 1];
 };
 
+/**
+ * Gets the last and the rest of elements of an `Iterable`.
+ *
+ * @param iterable - An `Iterable`. If the iterable is not an array or string,
+ *   its constructor must be able to accept an array as an argument. This is
+ *   necessary to construct the iterable for the remaining elements as an
+ *   iterable of same type as the original iterable. Examples of such iterables
+ *   include, `Set`, `Map`, and `Uint8Array`.
+ * @returns an array where the first item is the rest of the elements after
+ *   removing the last element of `iterable`, and the second element is the
+ *   last element of the iterable.
+ * @example
+ * ```ts
+ * console.log(getLastAndRest([1, 2])); // [[1], 2]
+ * console.log(getLastAndRest([1])); // [[], 1]
+ * console.log(getLastAndRest('match')); // ['matc', 'h']
+ * ```
+ */
 export const getLastAndRest: GetValue<Iterable<unknown>> = iterable => {
   switch (true) {
     case typeof iterable === 'string': {
