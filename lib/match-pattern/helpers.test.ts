@@ -52,6 +52,17 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('[..._]', not(toMatch(helpers.lastPattern)));
     });
 
+    it('should match last and rest pattern', expect => {
+      expect('[...rest, last]', toMatch(helpers.lastAndRestPattern));
+      expect('[...rest, _last]', toMatch(helpers.lastAndRestPattern));
+      expect('[...rest, $last]', toMatch(helpers.lastAndRestPattern));
+      expect('[...rest, last1]', toMatch(helpers.lastAndRestPattern));
+      expect('[..._, last]', toMatch(helpers.lastAndRestPattern));
+      expect('[...rest, 1last]', not(toMatch(helpers.lastAndRestPattern)));
+      expect('[last]', not(toMatch(helpers.lastAndRestPattern)));
+      expect('[...rest]', not(toMatch(helpers.lastAndRestPattern)));
+    });
+
     it('should match literal pattern', expect => {
       expect('"value"', toMatch(helpers.literalPattern));
       expect(`'value'`, toMatch(helpers.literalPattern));
@@ -89,6 +100,30 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(helpers.getLast('match'), toEqual('h'));
       expect(helpers.getLast('m'), toEqual('m'));
       expect(helpers.getLast(['match', 'pattern']), toEqual('pattern'));
+    });
+
+    it('should get the last and the rest of the elements of an iterable', expect => {
+      expect(helpers.getLastAndRest([1, 2]), toEqual([[1], 2]));
+      expect(helpers.getLastAndRest([1]), toEqual([[], 1]));
+      expect(helpers.getLastAndRest('match'), toEqual(['matc', 'h']));
+      expect(helpers.getLastAndRest('m'), toEqual(['', 'm']));
+      expect(
+        helpers.getLastAndRest(['match', 'pattern']),
+        toEqual([['match'], 'pattern'])
+      );
+      expect(
+        helpers.getLastAndRest(new Set([1, 2])),
+        toEqual([new Set([1]), 2])
+      );
+      expect(
+        helpers.getLastAndRest(
+          new Map([
+            [1, 1],
+            [2, 2]
+          ])
+        ),
+        toEqual([new Map([[1, 1]]), [2, 2]])
+      );
     });
   });
 
@@ -213,6 +248,14 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(hasMinLength1(arr), toEqual(true));
       expect(getLast(arr), toEqual(2));
       expect(getLast(arr), not(toEqual(1)));
+    });
+
+    it('should get matcher for last and rest', expect => {
+      const arr = [1, 2];
+      const [hasMinLength1, getLastAndRest] =
+        helpers.getMatcher('[...rest, last]');
+      expect(hasMinLength1(arr), toEqual(true));
+      expect(getLastAndRest(arr), toEqual([[1], 2]));
     });
 
     it('should get matcher for binary operations', expect => {

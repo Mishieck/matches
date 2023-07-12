@@ -35,10 +35,16 @@ export type Pattern =
   | IdentifierPattern
   | BinaryOperationPattern;
 
-export type GetValue = (value: unknown) => unknown;
+export type GetValue<Input = unknown, Output = unknown> = (
+  value: Input
+) => Output;
 export type Matcher = [Compare, GetValue];
 export type HeadAndTail<Item> = [Item, Array<Item>];
 export type PatternEntry = [Pattern, CallableFunction];
+
+export type IterableConstructor<Value = unknown> = new (
+  arr?: Array<Value>
+) => ThisType<Iterable<Value>>;
 
 export const anyPattern = /^_$/;
 export const emptyPattern = /^\[\]$/;
@@ -46,6 +52,8 @@ export const headPattern = /^\[([_a-zA-Z$][\w$]*)\]$/;
 export const headAndTailPattern =
   /^\[([_a-zA-Z$][\w$]+),\s+\.\.\.([_a-zA-Z$][\w$]*)\]$/;
 export const lastPattern = /^\[\.\.\._,\s+([_a-zA-Z$][\w$]*)\]$/;
+export const lastAndRestPattern =
+  /^\[\.\.\.([_a-zA-Z$][\w$]*),\s+([_a-zA-Z$][\w$]*)\]$/;
 export const literalPattern = /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$)/;
 export const binaryOperationPattern =
   /(^[_a-zA-Z$][\w$]*)\s([<>]|<=|>=|==|===|!=)\s(['"].*['"]|\-?\d+n|\-?\d+)/;
@@ -109,6 +117,30 @@ export const getHeadAndTail: GetValue = iterable => {
 export const getLast: GetValue = arrayLike => {
   const al = arrayLike as ArrayLike<unknown>;
   return al[al.length - 1];
+};
+
+export const getLastAndRest: GetValue<Iterable<unknown>> = iterable => {
+  switch (true) {
+    case typeof iterable === 'string': {
+      const str = iterable as string;
+
+      return [str.substring(0, str.length - 1), str[str.length - 1]];
+    }
+    case Array.isArray(iterable): {
+      const arr = iterable as Array<unknown>;
+
+      return [(arr as Array<unknown>).slice(0, arr.length - 1), arr.at(-1)];
+    }
+    default: {
+      const arr = [...iterable];
+      return [
+        new (iterable.constructor as IterableConstructor)(
+          arr.slice(0, arr.length - 1)
+        ),
+        arr.at(-1)
+      ];
+    }
+  }
 };
 
 /**
@@ -206,6 +238,11 @@ export const getMatcher = (pattern: Pattern): Matcher => {
       return [matchHelpers.hasMinLength(1) as Compare, getHeadAndTail];
     case matchHelpers.matches(lastPattern)(pattern):
       return [matchHelpers.hasMinLength(1) as Compare, getLast];
+    case matchHelpers.matches(lastAndRestPattern)(pattern):
+      return [
+        matchHelpers.hasMinLength(1) as Compare,
+        getLastAndRest as Compare
+      ];
     case matchHelpers.matches(binaryOperationPattern)(pattern):
       return [getBinaryOpComparator(pattern) as Compare, identity];
     default:
