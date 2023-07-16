@@ -216,7 +216,8 @@ export const getPatternValue = (value: string) => {
 };
 
 export const getProperty =
-  (property: string) => (object: Record<string | number, unknown>) =>
+  (property: string | number): GetValue<Record<string | number, unknown>> =>
+  object =>
     object[property];
 
 const binaryOps: Record<string, IsMatch | IsMatchSame<Inequable>> = {
@@ -230,10 +231,24 @@ const binaryOps: Record<string, IsMatch | IsMatchSame<Inequable>> = {
 
 export const getBinaryOpMatcher = (pattern: string): Matcher => {
   const [left, operator, right] = getMatches(pattern, binaryOperationPattern);
+  const propertyAccessPattern = /(\.[_a-zA-Z$][\w$]*|\[.+\])/;
   // console.log({ right });
   const value = getPatternValue(right);
+  const compare = binaryOps[operator](value) as Compare;
+  let getValue: GetValue = identity;
+
+  if (propertyAccessPattern.test(left)) {
+    let property: string | number = left.replace(/^[\w$]+/, '');
+
+    if (property.startsWith('.')) property = property.substring(1);
+    else if (property.startsWith('["'))
+      property = property.replaceAll(/^\["|"\]$/g, '');
+    else property = Number(property.replaceAll(/^\[|\]$/g, ''));
+
+    getValue = getProperty(property) as GetValue;
+  }
   // console.log({ value });
-  return [binaryOps[operator](value) as Compare, identity];
+  return [compare, getValue];
 };
 
 /**

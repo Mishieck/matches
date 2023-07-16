@@ -215,6 +215,25 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       const [equalsA] = helpers.getBinaryOpMatcher('value === "a"');
       expect(equalsA('a'), toEqual(true));
     });
+
+    it('should get matcher for property accessor binary operation patterns', expect => {
+      const [equalsA, getValue] = helpers.getBinaryOpMatcher(
+        'object.value === "a"'
+      );
+
+      const [isLessThan1, getItem] = helpers.getBinaryOpMatcher('array[0] < 1');
+
+      const [equalsAge, getAge] = helpers.getBinaryOpMatcher(
+        'person["age"] === 23'
+      );
+
+      expect(equalsA('a'), toEqual(true));
+      expect(getValue({ value: 'a' }), toEqual('a'));
+      expect(isLessThan1(0), toEqual(true));
+      expect(getItem([0]), toEqual(0));
+      expect(equalsAge(23), toEqual(true));
+      expect(getAge({ age: 23 }), toEqual(23));
+    });
   });
 
   describe('getMatcher', it => {
