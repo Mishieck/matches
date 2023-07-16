@@ -56,7 +56,7 @@ export const lastAndRestPattern =
   /^\[\.\.\.([_a-zA-Z$][\w$]*),\s+([_a-zA-Z$][\w$]*)\]$/;
 export const literalPattern = /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$)/;
 export const binaryOperationPattern =
-  /(^[_a-zA-Z$][\w$]*)\s([<>]|<=|>=|==|===|!=)\s(['"].*['"]|\-?\d+n|\-?\d+)/;
+  /(^[_a-zA-Z$][\w$]*(?:\.[_a-zA-Z$][\w$]*)?)\s([<>]|<=|>=|==|===|!=)\s(['"].*['"]|\-?\d+n|\-?\d+)/;
 export const truthyPattern = /^\?$/;
 export const falsyPattern = /^!$/;
 export const existPattern = /^\?\?$/;
