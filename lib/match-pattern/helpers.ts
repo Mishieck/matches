@@ -1,6 +1,7 @@
 import * as matchHelpers from '../match/helpers.ts';
 import type { IsMatch, IsMatchSame, Inequable } from '../match/helpers.ts';
 import type { Compare } from '../match/match.types.ts';
+import type { GenericRecord } from '../types/data.types.ts';
 
 export type EmptyPattern = '';
 export type AnyPattern = '_';
@@ -221,7 +222,7 @@ export const getPatternValue = (value: string) => {
 };
 
 export const getProperty =
-  (property: string | number): GetValue<Record<string | number, unknown>> =>
+  (property: string | number): GetValue<GenericRecord> =>
   object =>
     object[property];
 
@@ -275,13 +276,13 @@ export const getObjectProperties: GetValue<
 
 export const getPropertyValues =
   ([property, rest]: [string, string]): GetValue<
-    Record<string, unknown>,
-    Record<string, unknown>
+    GenericRecord,
+    GenericRecord
   > =>
   object => {
     const keys = Object.keys(object);
     keys.splice(keys.indexOf(property), 1);
-    const restValues: Record<string, unknown> = {};
+    const restValues: GenericRecord = {};
     for (const key of keys) restValues[key] = object[key];
     return { [property]: object[property], [rest]: restValues };
   };

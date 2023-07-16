@@ -1,3 +1,4 @@
+import type { GenericRecord } from '../types/data.types.ts';
 import type { Compare } from './match.types.ts';
 
 export type DataType =
@@ -607,7 +608,7 @@ export const none: IsMatch<ReturnType<IsMatch>, Iterable<unknown>> =
     return true;
   };
 
-export const hasProperty: IsMatch<string, Record<string | number, unknown>> =
+export const hasProperty: IsMatch<string, GenericRecord> =
   property => object => {
     return property in object;
   };
