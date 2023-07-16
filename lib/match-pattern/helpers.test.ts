@@ -1,4 +1,11 @@
-import { mod, toEqual, type ModuleRunner, toMatch, not } from '../../deps.ts';
+import {
+  mod,
+  toEqual,
+  type ModuleRunner,
+  toMatch,
+  not,
+  expect
+} from '../../deps.ts';
 import * as helpers from './helpers.ts';
 
 export const runMatchPatternHelpers: ModuleRunner = describe => {
@@ -71,6 +78,20 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('1n', toMatch(helpers.literalPattern));
       expect('10n', toMatch(helpers.literalPattern));
       expect('a', not(toMatch(helpers.literalPattern)));
+    });
+
+    it('should match truthy pattern', expect => {
+      expect('?', toMatch(helpers.truthyPattern));
+      expect('??', not(toMatch(helpers.truthyPattern)));
+    });
+
+    it('should match falsy pattern', expect => {
+      expect('!', toMatch(helpers.falsyPattern));
+    });
+
+    it('should match exist pattern', expect => {
+      expect('??', toMatch(helpers.existPattern));
+      expect('?', not(toMatch(helpers.existPattern)));
     });
   });
 

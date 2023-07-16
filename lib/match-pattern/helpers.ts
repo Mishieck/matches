@@ -57,6 +57,9 @@ export const lastAndRestPattern =
 export const literalPattern = /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$)/;
 export const binaryOperationPattern =
   /(^[_a-zA-Z$][\w$]*)\s([<>]|<=|>=|==|===|!=)\s(['"].*['"]|\-?\d+n|\-?\d+)/;
+export const truthyPattern = /^\?$/;
+export const falsyPattern = /^!$/;
+export const existPattern = /^\?\?$/;
 
 /**
  * Returns the argument passed to it.
