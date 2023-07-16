@@ -67,16 +67,6 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       );
     });
 
-    it('should get object property', expect => {
-      const property = helpers.getObjectProperty('{property}');
-      expect(property, toEqual('property'));
-    });
-
-    it('should get object properties', expect => {
-      const properties = helpers.getObjectProperties('{ property, ...rest }');
-      expect(properties, toEqual(['property', 'rest']));
-    });
-
     it('should get object values', expect => {
       const { property, rest } = helpers.getPropertyValues([
         'property',
@@ -85,30 +75,6 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
 
       expect(property, toEqual('value'));
       expect(rest, toEqual({ another: '1' }));
-    });
-  });
-
-  describe('getMatches', it => {
-    it('should get regex group matches', expect => {
-      expect(helpers.getMatches('1', /(\d)/), toEqual(['1']));
-      expect(helpers.getMatches('123', /(\d+)/), toEqual(['123']));
-      expect(helpers.getMatches('match', /(\w+)/), toEqual(['match']));
-      expect(helpers.getMatches('match', /([a-z])/), toEqual(['m']));
-      expect(
-        helpers.getMatches('1 match', /(\d)\s([a-z])/),
-        toEqual(['1', 'm'])
-      );
-    });
-  });
-
-  describe('getPatternValue', it => {
-    it('should get pattern values', expect => {
-      expect(helpers.getPatternValue(`'match'`), toEqual('match'));
-      expect(helpers.getPatternValue('"match"'), toEqual('match'));
-      expect(helpers.getPatternValue('1'), toEqual(1));
-      expect(helpers.getPatternValue('1n'), toEqual(BigInt(1)));
-      expect(helpers.getPatternValue('null'), toEqual(null));
-      expect(helpers.getPatternValue('undefined'), toEqual(undefined));
     });
   });
 

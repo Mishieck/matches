@@ -3,6 +3,7 @@ import type { IsMatch, IsMatchSame, Inequable } from '../match/helpers.ts';
 import type { Compare } from '../match/match.types.ts';
 import type { GenericRecord } from '../types/data.types.ts';
 import * as regexes from './helpers/regexes.ts';
+import * as patternValueGetters from './helpers/pattern-value-getters.ts';
 
 export type Pattern = string;
 
@@ -139,38 +140,6 @@ export const getLastAndRest: GetValue<Iterable<unknown>> = iterable => {
   }
 };
 
-/**
- * Gets the parts of a string that matches the groups in a regex.
- *
- * @param pattern - A string to match.
- * @param regex - A regex to match against. The regex must contain groups.
- * @returns An array that contains all the matches.
- * @example
- * ```ts
- * const regex = /(\d+)/;
- * console.log(getMatches('1', regex)); // ['1']
- * ```
- */
-export const getMatches = (pattern: string, regex: RegExp) =>
-  (pattern.match(regex) || []).slice(1);
-
-/**
- * Gets the value from a literal pattern.
- *
- * @param value - A string pattern.
- * @returns A value of the pattern.
- * @example
- * ```ts
- * console.log(getPatternValue('1')); // 1
- * console.log(getPatternValue('1n')); // 1n
- * console.log(getPatternValue('"match"')); // 'match'
- * ```
- */
-export const getPatternValue = (value: string) => {
-  const func = new Function(`return ${value};`);
-  return func();
-};
-
 export const getProperty =
   (property: string | number): GetValue<GenericRecord> =>
   object =>
@@ -186,14 +155,14 @@ const binaryOps: Record<string, IsMatch | IsMatchSame<Inequable>> = {
 };
 
 export const getBinaryOpMatcher = (pattern: string): Matcher => {
-  const [left, operator, right] = getMatches(
+  const [left, operator, right] = patternValueGetters.getMatches(
     pattern,
     regexes.binaryOperationPattern
   );
   const propertyAccessPattern = /(\.[_a-zA-Z$][\w$]*|\[.+\])/;
   // console.log({ operator });
   // console.log({ right });
-  const value = getPatternValue(right);
+  const value = patternValueGetters.getLiteral(right);
   const compare = binaryOps[operator](value) as Compare;
   let getValue: GetValue = identity;
 
@@ -209,22 +178,6 @@ export const getBinaryOpMatcher = (pattern: string): Matcher => {
   }
   // console.log({ value });
   return [compare, getValue];
-};
-
-export const createRegex = (literal: string) => {
-  const [regex, flags] = getMatches(literal, regexes.regexPattern);
-  return new RegExp(regex, flags);
-};
-
-export const getObjectProperty: GetValue<string, string> = pattern =>
-  getMatches(pattern, regexes.objectPropertyPattern)[0];
-
-export const getObjectProperties: GetValue<
-  string,
-  [string, string]
-> = pattern => {
-  const [property, rest] = getMatches(pattern, regexes.objectPropertiesPattern);
-  return [property, rest];
 };
 
 export const getPropertyValues =
@@ -271,7 +224,7 @@ export const getMatcher = (pattern: Pattern): Matcher => {
   switch (true) {
     case matchHelpers.matches(regexes.literalPattern)(pattern):
       return [
-        matchHelpers.equals(getPatternValue(pattern)) as Compare,
+        matchHelpers.equals(patternValueGetters.getLiteral(pattern)) as Compare,
         identity
       ];
     case matchHelpers.matches(regexes.anyPattern)(pattern):
@@ -301,14 +254,19 @@ export const getMatcher = (pattern: Pattern): Matcher => {
     case matchHelpers.matches(regexes.existPattern)(pattern):
       return [matchHelpers.exists(), identity];
     case matchHelpers.matches(regexes.regexPattern)(pattern):
-      return [matchHelpers.matches(createRegex(pattern)) as Compare, identity];
+      return [
+        matchHelpers.matches(patternValueGetters.getRegex(pattern)) as Compare,
+        identity
+      ];
     case matchHelpers.matches(regexes.objectPropertyPattern)(pattern):
       return [
-        matchHelpers.hasProperty(getObjectProperty(pattern)) as Compare,
-        getProperty(getObjectProperty(pattern)) as GetValue
+        matchHelpers.hasProperty(
+          patternValueGetters.getObjectProperty(pattern)
+        ) as Compare,
+        getProperty(patternValueGetters.getObjectProperty(pattern)) as GetValue
       ];
     case matchHelpers.matches(regexes.objectPropertiesPattern)(pattern): {
-      const properties = getObjectProperties(pattern);
+      const properties = patternValueGetters.getObjectProperties(pattern);
 
       return [
         matchHelpers.hasProperty(properties[0]) as Compare,
