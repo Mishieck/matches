@@ -77,6 +77,10 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('10', toMatch(helpers.literalPattern));
       expect('1n', toMatch(helpers.literalPattern));
       expect('10n', toMatch(helpers.literalPattern));
+      expect('true', toMatch(helpers.literalPattern));
+      expect('false', toMatch(helpers.literalPattern));
+      expect('null', toMatch(helpers.literalPattern));
+      expect('undefined', toMatch(helpers.literalPattern));
       expect('a', not(toMatch(helpers.literalPattern)));
     });
 
@@ -87,6 +91,10 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('value <= 1', toMatch(helpers.binaryOperationPattern));
       expect('value >= 1', toMatch(helpers.binaryOperationPattern));
       expect('value > 1', toMatch(helpers.binaryOperationPattern));
+      expect('value === true', toMatch(helpers.binaryOperationPattern));
+      expect('value === false', toMatch(helpers.binaryOperationPattern));
+      expect('value === null', toMatch(helpers.binaryOperationPattern));
+      expect('value === undefined', toMatch(helpers.binaryOperationPattern));
       expect('array.length === 1', toMatch(helpers.binaryOperationPattern));
       expect('map.size === 1', toMatch(helpers.binaryOperationPattern));
       expect('array.length < 1', toMatch(helpers.binaryOperationPattern));

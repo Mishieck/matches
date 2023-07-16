@@ -54,9 +54,10 @@ export const headAndTailPattern =
 export const lastPattern = /^\[\.\.\._,\s+([_a-zA-Z$][\w$]*)\]$/;
 export const lastAndRestPattern =
   /^\[\.\.\.([_a-zA-Z$][\w$]*),\s+([_a-zA-Z$][\w$]*)\]$/;
-export const literalPattern = /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$)/;
+export const literalPattern =
+  /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$|^true$|^false$|^null$|^undefined$)/;
 export const binaryOperationPattern =
-  /(^[_a-zA-Z$][\w$]*(?:\.[_a-zA-Z$][\w$]*|\[(?:".*"|\d+)\])?)\s([<>]|<=|>=|==|===|!=)\s(['"].*['"]|\-?\d+n|\-?\d+)/;
+  /(^[_a-zA-Z$][\w$]*(?:\.[_a-zA-Z$][\w$]*|\[(?:".*"|\d+)\])?)\s([<>]|<=|>=|==|===|!=)\s(.*)/;
 export const truthyPattern = /^\?$/;
 export const falsyPattern = /^!$/;
 export const existPattern = /^\?\?$/;
@@ -232,6 +233,7 @@ const binaryOps: Record<string, IsMatch | IsMatchSame<Inequable>> = {
 export const getBinaryOpMatcher = (pattern: string): Matcher => {
   const [left, operator, right] = getMatches(pattern, binaryOperationPattern);
   const propertyAccessPattern = /(\.[_a-zA-Z$][\w$]*|\[.+\])/;
+  // console.log({ operator });
   // console.log({ right });
   const value = getPatternValue(right);
   const compare = binaryOps[operator](value) as Compare;
