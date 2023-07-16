@@ -2,6 +2,7 @@ import * as matchHelpers from '../match/helpers.ts';
 import type { IsMatch, IsMatchSame, Inequable } from '../match/helpers.ts';
 import type { Compare } from '../match/match.types.ts';
 import type { GenericRecord } from '../types/data.types.ts';
+import * as regexes from './helpers/regexes.ts';
 
 export type Pattern = string;
 
@@ -15,26 +16,6 @@ export type PatternEntry = [Pattern, CallableFunction];
 export type IterableConstructor<Value = unknown> = new (
   arr?: Array<Value>
 ) => ThisType<Iterable<Value>>;
-
-export const anyPattern = /^_$/;
-export const emptyPattern = /^\[\]$/;
-export const headPattern = /^\[([_a-zA-Z$][\w$]*)\]$/;
-export const headAndTailPattern =
-  /^\[([_a-zA-Z$][\w$]+),\s+\.\.\.([_a-zA-Z$][\w$]*)\]$/;
-export const lastPattern = /^\[\.\.\._,\s+([_a-zA-Z$][\w$]*)\]$/;
-export const lastAndRestPattern =
-  /^\[\.\.\.([_a-zA-Z$][\w$]*),\s+([_a-zA-Z$][\w$]*)\]$/;
-export const literalPattern =
-  /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$|^true$|^false$|^null$|^undefined$)/;
-export const binaryOperationPattern =
-  /(^[_a-zA-Z$][\w$]*(?:\.[_a-zA-Z$][\w$]*|\[(?:".*"|\d+)\])?)\s([<>]|<=|>=|==|===|!=)\s(.*)/;
-export const truthyPattern = /^\?$/;
-export const falsyPattern = /^!$/;
-export const existPattern = /^\?\?$/;
-export const regexPattern = /^\/((?:\\\/|[^\/])+)\/([gimsuy]*)$/;
-export const objectPropertyPattern = /^{\s?([_a-zA-Z$][\w$]*)\s?}$/;
-export const objectPropertiesPattern =
-  /^{\s?([_a-zA-Z$][\w$]*),\s\.\.\.([_a-zA-Z$][\w$]*)\s?}$/;
 
 /**
  * Returns the argument passed to it.
@@ -205,7 +186,10 @@ const binaryOps: Record<string, IsMatch | IsMatchSame<Inequable>> = {
 };
 
 export const getBinaryOpMatcher = (pattern: string): Matcher => {
-  const [left, operator, right] = getMatches(pattern, binaryOperationPattern);
+  const [left, operator, right] = getMatches(
+    pattern,
+    regexes.binaryOperationPattern
+  );
   const propertyAccessPattern = /(\.[_a-zA-Z$][\w$]*|\[.+\])/;
   // console.log({ operator });
   // console.log({ right });
@@ -228,18 +212,18 @@ export const getBinaryOpMatcher = (pattern: string): Matcher => {
 };
 
 export const createRegex = (literal: string) => {
-  const [regex, flags] = getMatches(literal, regexPattern);
+  const [regex, flags] = getMatches(literal, regexes.regexPattern);
   return new RegExp(regex, flags);
 };
 
 export const getObjectProperty: GetValue<string, string> = pattern =>
-  getMatches(pattern, objectPropertyPattern)[0];
+  getMatches(pattern, regexes.objectPropertyPattern)[0];
 
 export const getObjectProperties: GetValue<
   string,
   [string, string]
 > = pattern => {
-  const [property, rest] = getMatches(pattern, objectPropertiesPattern);
+  const [property, rest] = getMatches(pattern, regexes.objectPropertiesPattern);
   return [property, rest];
 };
 
@@ -285,45 +269,45 @@ export const getPropertyValues =
  */
 export const getMatcher = (pattern: Pattern): Matcher => {
   switch (true) {
-    case matchHelpers.matches(literalPattern)(pattern):
+    case matchHelpers.matches(regexes.literalPattern)(pattern):
       return [
         matchHelpers.equals(getPatternValue(pattern)) as Compare,
         identity
       ];
-    case matchHelpers.matches(anyPattern)(pattern):
+    case matchHelpers.matches(regexes.anyPattern)(pattern):
       return [matchHelpers.isAny(), identity];
-    case matchHelpers.matches(emptyPattern)(pattern):
+    case matchHelpers.matches(regexes.emptyPattern)(pattern):
       return [matchHelpers.hasLength(0) as Compare, identity];
-    case matchHelpers.matches(headPattern)(pattern):
+    case matchHelpers.matches(regexes.headPattern)(pattern):
       return [matchHelpers.hasLength(1) as Compare, getOnlyItem];
-    case matchHelpers.matches(headAndTailPattern)(pattern):
+    case matchHelpers.matches(regexes.headAndTailPattern)(pattern):
       return [
         matchHelpers.hasMinLength(1) as Compare,
         getHeadAndTail as GetValue
       ];
-    case matchHelpers.matches(lastPattern)(pattern):
+    case matchHelpers.matches(regexes.lastPattern)(pattern):
       return [matchHelpers.hasMinLength(1) as Compare, getLast];
-    case matchHelpers.matches(lastAndRestPattern)(pattern):
+    case matchHelpers.matches(regexes.lastAndRestPattern)(pattern):
       return [
         matchHelpers.hasMinLength(1) as Compare,
         getLastAndRest as GetValue
       ];
-    case matchHelpers.matches(binaryOperationPattern)(pattern):
+    case matchHelpers.matches(regexes.binaryOperationPattern)(pattern):
       return getBinaryOpMatcher(pattern);
-    case matchHelpers.matches(truthyPattern)(pattern):
+    case matchHelpers.matches(regexes.truthyPattern)(pattern):
       return [matchHelpers.isTruthy(), identity];
-    case matchHelpers.matches(falsyPattern)(pattern):
+    case matchHelpers.matches(regexes.falsyPattern)(pattern):
       return [matchHelpers.isFalsy(), identity];
-    case matchHelpers.matches(existPattern)(pattern):
+    case matchHelpers.matches(regexes.existPattern)(pattern):
       return [matchHelpers.exists(), identity];
-    case matchHelpers.matches(regexPattern)(pattern):
+    case matchHelpers.matches(regexes.regexPattern)(pattern):
       return [matchHelpers.matches(createRegex(pattern)) as Compare, identity];
-    case matchHelpers.matches(objectPropertyPattern)(pattern):
+    case matchHelpers.matches(regexes.objectPropertyPattern)(pattern):
       return [
         matchHelpers.hasProperty(getObjectProperty(pattern)) as Compare,
         getProperty(getObjectProperty(pattern)) as GetValue
       ];
-    case matchHelpers.matches(objectPropertiesPattern)(pattern): {
+    case matchHelpers.matches(regexes.objectPropertiesPattern)(pattern): {
       const properties = getObjectProperties(pattern);
 
       return [
