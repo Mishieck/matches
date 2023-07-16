@@ -116,6 +116,12 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('??', toMatch(helpers.existPattern));
       expect('?', not(toMatch(helpers.existPattern)));
     });
+
+    it('should match regex pattern', expect => {
+      expect(`/\\d/`, toMatch(helpers.regexPattern));
+      expect('/\\w/i', toMatch(helpers.regexPattern));
+      expect('/[a-zA-Z]+/ig', toMatch(helpers.regexPattern));
+    });
   });
 
   describe('Value Getters', it => {
@@ -361,6 +367,19 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(exists(0), toEqual(true));
       expect(exists(null), toEqual(false));
       expect(exists(undefined), toEqual(false));
+    });
+
+    it('should matcher for regex', expect => {
+      const [matchesNumber] = helpers.getMatcher('/\\d+/');
+      const [matchesUsername] = helpers.getMatcher('/@\\w+/');
+      const [matchesAlphanumeric] = helpers.getMatcher('/[a-zA-Z0-9]/');
+
+      expect(matchesNumber('1'), toEqual(true));
+      expect(matchesNumber('a'), toEqual(false));
+      expect(matchesUsername('@match_1'), toEqual(true));
+      expect(matchesUsername('match'), toEqual(false));
+      expect(matchesAlphanumeric('match'), toEqual(true));
+      expect(matchesAlphanumeric('_'), toEqual(false));
     });
   });
 };

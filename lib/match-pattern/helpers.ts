@@ -61,6 +61,7 @@ export const binaryOperationPattern =
 export const truthyPattern = /^\?$/;
 export const falsyPattern = /^!$/;
 export const existPattern = /^\?\?$/;
+export const regexPattern = /^\/((?:\\\/|[^\/])+)\/([gimsuy]*)$/;
 
 /**
  * Returns the argument passed to it.
@@ -253,6 +254,11 @@ export const getBinaryOpMatcher = (pattern: string): Matcher => {
   return [compare, getValue];
 };
 
+export const createRegex = (literal: string) => {
+  const [regex, flags] = getMatches(literal, regexPattern);
+  return new RegExp(regex, flags);
+};
+
 /**
  * Gets utility functions for matching and extracting values from a given value.
  *
@@ -313,6 +319,8 @@ export const getMatcher = (pattern: Pattern): Matcher => {
       return [matchHelpers.isFalsy(), identity];
     case matchHelpers.matches(existPattern)(pattern):
       return [matchHelpers.exists(), identity];
+    case matchHelpers.matches(regexPattern)(pattern):
+      return [matchHelpers.matches(createRegex(pattern)) as Compare, identity];
     default:
       return [
         matchHelpers.isAny(),
