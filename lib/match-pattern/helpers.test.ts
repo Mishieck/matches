@@ -122,6 +122,12 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('/\\w/i', toMatch(helpers.regexPattern));
       expect('/[a-zA-Z]+/ig', toMatch(helpers.regexPattern));
     });
+
+    it('should match object property pattern', expect => {
+      expect(`{property}`, toMatch(helpers.objectPropertyPattern));
+      expect('{ property }', toMatch(helpers.objectPropertyPattern));
+      expect('{}', not(toMatch(helpers.objectPropertyPattern)));
+    });
   });
 
   describe('Value Getters', it => {
@@ -187,6 +193,11 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
         ),
         toEqual([new Map([[1, 1]]), [2, 2]])
       );
+    });
+
+    it('should get object property', expect => {
+      const property = helpers.getObjectProperty('{property}');
+      expect(property, toEqual('property'));
     });
   });
 
@@ -340,7 +351,7 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(isNotEqualTo1(0), toEqual(true));
     });
 
-    it('should matcher for truthy', expect => {
+    it('should get matcher for truthy', expect => {
       const [isTruthy] = helpers.getMatcher('?');
 
       expect(isTruthy(true), toEqual(true));
@@ -349,7 +360,7 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(isTruthy(0), toEqual(false));
     });
 
-    it('should matcher for falsy', expect => {
+    it('should get matcher for falsy', expect => {
       const [isFalsy] = helpers.getMatcher('!');
 
       expect(isFalsy(false), toEqual(true));
@@ -358,7 +369,7 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(isFalsy(0), toEqual(true));
     });
 
-    it('should matcher for exist', expect => {
+    it('should get matcher for exist', expect => {
       const [exists] = helpers.getMatcher('??');
 
       expect(exists(true), toEqual(true));
@@ -369,7 +380,7 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(exists(undefined), toEqual(false));
     });
 
-    it('should matcher for regex', expect => {
+    it('should get matcher for regex', expect => {
       const [matchesNumber] = helpers.getMatcher('/\\d+/');
       const [matchesUsername] = helpers.getMatcher('/@\\w+/');
       const [matchesAlphanumeric] = helpers.getMatcher('/[a-zA-Z0-9]/');
@@ -380,6 +391,13 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(matchesUsername('match'), toEqual(false));
       expect(matchesAlphanumeric('match'), toEqual(true));
       expect(matchesAlphanumeric('_'), toEqual(false));
+    });
+
+    it('should get matcher for object property', expect => {
+      const object = { property: 'value' };
+      const [hasProperty, getProperty] = helpers.getMatcher('{property}');
+      expect(hasProperty(object), toEqual(true));
+      expect(getProperty(object), toEqual('value'));
     });
   });
 };

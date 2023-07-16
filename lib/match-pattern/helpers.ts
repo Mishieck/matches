@@ -62,6 +62,7 @@ export const truthyPattern = /^\?$/;
 export const falsyPattern = /^!$/;
 export const existPattern = /^\?\?$/;
 export const regexPattern = /^\/((?:\\\/|[^\/])+)\/([gimsuy]*)$/;
+export const objectPropertyPattern = /^{\s?([_a-zA-Z$][\w$]*)\s?}$/;
 
 /**
  * Returns the argument passed to it.
@@ -259,6 +260,9 @@ export const createRegex = (literal: string) => {
   return new RegExp(regex, flags);
 };
 
+export const getObjectProperty: GetValue<string, string> = pattern =>
+  getMatches(pattern, objectPropertyPattern)[0];
+
 /**
  * Gets utility functions for matching and extracting values from a given value.
  *
@@ -321,6 +325,11 @@ export const getMatcher = (pattern: Pattern): Matcher => {
       return [matchHelpers.exists(), identity];
     case matchHelpers.matches(regexPattern)(pattern):
       return [matchHelpers.matches(createRegex(pattern)) as Compare, identity];
+    case matchHelpers.matches(objectPropertyPattern)(pattern):
+      return [
+        matchHelpers.hasProperty(getObjectProperty(pattern)) as Compare,
+        getProperty(getObjectProperty(pattern)) as GetValue
+      ];
     default:
       return [
         matchHelpers.isAny(),
