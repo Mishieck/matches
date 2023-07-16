@@ -215,6 +215,10 @@ export const getPatternValue = (value: string) => {
   return func();
 };
 
+export const getProperty =
+  (property: string) => (object: Record<string | number, unknown>) =>
+    object[property];
+
 const binaryOps: Record<string, IsMatch | IsMatchSame<Inequable>> = {
   '<': matchHelpers.isLessThan,
   '>': matchHelpers.isGreaterThan,
@@ -224,14 +228,12 @@ const binaryOps: Record<string, IsMatch | IsMatchSame<Inequable>> = {
   '!=': (value: unknown) => matchHelpers.not(matchHelpers.equals(value))
 };
 
-export const getBinaryOpComparator = (
-  pattern: string
-): Compare | Compare<Inequable> => {
-  const [_, operator, second] = getMatches(pattern, binaryOperationPattern);
-  // console.log({ second });
-  const value = getPatternValue(second);
+export const getBinaryOpMatcher = (pattern: string): Matcher => {
+  const [left, operator, right] = getMatches(pattern, binaryOperationPattern);
+  // console.log({ right });
+  const value = getPatternValue(right);
   // console.log({ value });
-  return binaryOps[operator](value);
+  return [binaryOps[operator](value) as Compare, identity];
 };
 
 /**
@@ -287,7 +289,7 @@ export const getMatcher = (pattern: Pattern): Matcher => {
         getLastAndRest as GetValue
       ];
     case matchHelpers.matches(binaryOperationPattern)(pattern):
-      return [getBinaryOpComparator(pattern) as Compare, identity];
+      return getBinaryOpMatcher(pattern);
     case matchHelpers.matches(truthyPattern)(pattern):
       return [matchHelpers.isTruthy(), identity];
     case matchHelpers.matches(falsyPattern)(pattern):

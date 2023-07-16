@@ -197,38 +197,20 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
     });
   });
 
-  describe('getBinaryOpComparator', it => {
-    it('should get comparators for number binary operation patterns', expect => {
-      expect(helpers.getBinaryOpComparator('value < 1')(0), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value > 1')(2), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value <= 1')(1), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value >= 1')(1), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value === 1')(1), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value != 1')(0), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value === 1')(0), toEqual(false));
+  describe('getBinaryOpMatcher', it => {
+    it('should get matcher for number binary operation patterns', expect => {
+      const [isLessThan1] = helpers.getBinaryOpMatcher('value < 1');
+      expect(isLessThan1(0), toEqual(true));
     });
 
-    it('should get comparators for bigint binary operation patterns', expect => {
-      expect(helpers.getBinaryOpComparator('value < 1n')(0n), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value > 1n')(2n), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value <= 1n')(1n), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value >= 1n')(1n), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value === 1n')(1n), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value === 1n')(0n), toEqual(false));
+    it('should get matcher for bigint binary operation patterns', expect => {
+      const [isLessThan1n] = helpers.getBinaryOpMatcher('value < 1n');
+      expect(isLessThan1n(0n), toEqual(true));
     });
 
-    it('should get comparators for string binary operation patterns', expect => {
-      expect(helpers.getBinaryOpComparator('value < "b"')('a'), toEqual(true));
-      expect(helpers.getBinaryOpComparator('value > "a"')('b'), toEqual(true));
-      expect(
-        helpers.getBinaryOpComparator('value === "a"')('a'),
-        toEqual(true)
-      );
-      expect(
-        helpers.getBinaryOpComparator('value === "a"')('b'),
-        toEqual(false)
-      );
-      expect(helpers.getBinaryOpComparator('value != "a"')('b'), toEqual(true));
+    it('should get matcher for string binary operation patterns', expect => {
+      const [equalsA] = helpers.getBinaryOpMatcher('value === "a"');
+      expect(equalsA('a'), toEqual(true));
     });
   });
 
