@@ -1,4 +1,4 @@
-import { toEqual, type ModuleRunner, mod } from '../../deps.ts';
+import { toEqual, type ModuleRunner, mod, expect } from '../../deps.ts';
 import * as helpers from './helpers.ts';
 
 export const runMatchHelpers: ModuleRunner = describe => {
@@ -231,6 +231,13 @@ export const runMatchHelpers: ModuleRunner = describe => {
       expect(helpers.hasMinSize(1)(new Map([[1, 1]])), toEqual(true));
       expect(helpers.hasMaxSize(1)(new Set([1])), toEqual(true));
       expect(helpers.hasMaxSize(1)(new Map([[1, 1]])), toEqual(true));
+    });
+
+    it('should handle object properties', expect => {
+      expect(
+        helpers.hasProperty('property')({ property: 'property' }),
+        toEqual(true)
+      );
     });
   });
 };

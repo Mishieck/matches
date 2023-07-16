@@ -606,3 +606,8 @@ export const none: IsMatch<ReturnType<IsMatch>, Iterable<unknown>> =
     for (const item of iterable) if (isMatch(item)) return false;
     return true;
   };
+
+export const hasProperty: IsMatch<string, Record<string | number, unknown>> =
+  property => object => {
+    return property in object;
+  };
