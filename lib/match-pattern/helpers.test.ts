@@ -309,6 +309,35 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect(isGreaterThan1(2), toEqual(true));
       expect(isNotEqualTo1(0), toEqual(true));
     });
+
+    it('should matcher for truthy', expect => {
+      const [isTruthy] = helpers.getMatcher('?');
+
+      expect(isTruthy(true), toEqual(true));
+      expect(isTruthy(false), toEqual(false));
+      expect(isTruthy(1), toEqual(true));
+      expect(isTruthy(0), toEqual(false));
+    });
+
+    it('should matcher for falsy', expect => {
+      const [isFalsy] = helpers.getMatcher('!');
+
+      expect(isFalsy(false), toEqual(true));
+      expect(isFalsy(true), toEqual(false));
+      expect(isFalsy(1), toEqual(false));
+      expect(isFalsy(0), toEqual(true));
+    });
+
+    it('should matcher for exist', expect => {
+      const [exists] = helpers.getMatcher('??');
+
+      expect(exists(true), toEqual(true));
+      expect(exists(false), toEqual(true));
+      expect(exists(1), toEqual(true));
+      expect(exists(0), toEqual(true));
+      expect(exists(null), toEqual(false));
+      expect(exists(undefined), toEqual(false));
+    });
   });
 };
 

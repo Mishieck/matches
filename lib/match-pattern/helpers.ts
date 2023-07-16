@@ -288,6 +288,12 @@ export const getMatcher = (pattern: Pattern): Matcher => {
       ];
     case matchHelpers.matches(binaryOperationPattern)(pattern):
       return [getBinaryOpComparator(pattern) as Compare, identity];
+    case matchHelpers.matches(truthyPattern)(pattern):
+      return [matchHelpers.isTruthy(), identity];
+    case matchHelpers.matches(falsyPattern)(pattern):
+      return [matchHelpers.isFalsy(), identity];
+    case matchHelpers.matches(existPattern)(pattern):
+      return [matchHelpers.exists(), identity];
     default:
       return [
         matchHelpers.isAny(),
