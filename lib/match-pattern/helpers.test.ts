@@ -128,6 +128,13 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('{ property }', toMatch(helpers.objectPropertyPattern));
       expect('{}', not(toMatch(helpers.objectPropertyPattern)));
     });
+
+    it('should match object properties pattern', expect => {
+      expect(`{property, ...rest}`, toMatch(helpers.objectPropertiesPattern));
+      expect('{ property, ...rest }', toMatch(helpers.objectPropertiesPattern));
+      expect('{property}', not(toMatch(helpers.objectPropertiesPattern)));
+      expect('{...rest}', not(toMatch(helpers.objectPropertiesPattern)));
+    });
   });
 
   describe('Value Getters', it => {
@@ -198,6 +205,21 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
     it('should get object property', expect => {
       const property = helpers.getObjectProperty('{property}');
       expect(property, toEqual('property'));
+    });
+
+    it('should get object properties', expect => {
+      const properties = helpers.getObjectProperties('{ property, ...rest }');
+      expect(properties, toEqual(['property', 'rest']));
+    });
+
+    it('should get object values', expect => {
+      const { property, rest } = helpers.getPropertyValues([
+        'property',
+        'rest'
+      ])({ property: 'value', another: '1' });
+
+      expect(property, toEqual('value'));
+      expect(rest, toEqual({ another: '1' }));
     });
   });
 
@@ -398,6 +420,24 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       const [hasProperty, getProperty] = helpers.getMatcher('{property}');
       expect(hasProperty(object), toEqual(true));
       expect(getProperty(object), toEqual('value'));
+    });
+
+    it('should get matcher for object properties', expect => {
+      const object = { property: 'value', another: '1' };
+
+      const [hasProperty, getPropertyValues] = helpers.getMatcher(
+        '{property, ...rest}'
+      );
+
+      expect(hasProperty(object), toEqual(true));
+
+      const { property, rest } = getPropertyValues(object) as Record<
+        string,
+        unknown
+      >;
+
+      expect(property, toEqual('value'));
+      expect(rest, toEqual({ another: '1' }));
     });
   });
 };

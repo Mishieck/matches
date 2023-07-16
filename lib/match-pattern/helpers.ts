@@ -63,6 +63,8 @@ export const falsyPattern = /^!$/;
 export const existPattern = /^\?\?$/;
 export const regexPattern = /^\/((?:\\\/|[^\/])+)\/([gimsuy]*)$/;
 export const objectPropertyPattern = /^{\s?([_a-zA-Z$][\w$]*)\s?}$/;
+export const objectPropertiesPattern =
+  /^{\s?([_a-zA-Z$][\w$]*),\s\.\.\.([_a-zA-Z$][\w$]*)\s?}$/;
 
 /**
  * Returns the argument passed to it.
@@ -263,6 +265,27 @@ export const createRegex = (literal: string) => {
 export const getObjectProperty: GetValue<string, string> = pattern =>
   getMatches(pattern, objectPropertyPattern)[0];
 
+export const getObjectProperties: GetValue<
+  string,
+  [string, string]
+> = pattern => {
+  const [property, rest] = getMatches(pattern, objectPropertiesPattern);
+  return [property, rest];
+};
+
+export const getPropertyValues =
+  ([property, rest]: [string, string]): GetValue<
+    Record<string, unknown>,
+    Record<string, unknown>
+  > =>
+  object => {
+    const keys = Object.keys(object);
+    keys.splice(keys.indexOf(property), 1);
+    const restValues: Record<string, unknown> = {};
+    for (const key of keys) restValues[key] = object[key];
+    return { [property]: object[property], [rest]: restValues };
+  };
+
 /**
  * Gets utility functions for matching and extracting values from a given value.
  *
@@ -330,6 +353,14 @@ export const getMatcher = (pattern: Pattern): Matcher => {
         matchHelpers.hasProperty(getObjectProperty(pattern)) as Compare,
         getProperty(getObjectProperty(pattern)) as GetValue
       ];
+    case matchHelpers.matches(objectPropertiesPattern)(pattern): {
+      const properties = getObjectProperties(pattern);
+
+      return [
+        matchHelpers.hasProperty(properties[0]) as Compare,
+        getPropertyValues(properties) as GetValue
+      ];
+    }
     default:
       return [
         matchHelpers.isAny(),
