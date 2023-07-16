@@ -3,38 +3,7 @@ import type { IsMatch, IsMatchSame, Inequable } from '../match/helpers.ts';
 import type { Compare } from '../match/match.types.ts';
 import type { GenericRecord } from '../types/data.types.ts';
 
-export type EmptyPattern = '';
-export type AnyPattern = '_';
-export type IdentifierPattern = `${'_' | string}${string | ''}`;
-export type HeadPattern = `[${IdentifierPattern}]`;
-export type HeadAndTailPattern =
-  `[${IdentifierPattern}, ...${IdentifierPattern}]`;
-export type LastPattern = `[...${AnyPattern}, ${IdentifierPattern}]`;
-export type LastAndRestPattern =
-  `[...${IdentifierPattern}, ${IdentifierPattern}]`;
-export type LiteralPattern = `${string | number}`;
-export type OperandPattern = LiteralPattern | IdentifierPattern;
-export type ComparisonOperatorPattern =
-  | '=='
-  | '==='
-  | '!='
-  | '<'
-  | '<='
-  | '>'
-  | '>=';
-export type BinaryOperationPattern =
-  `${OperandPattern} ${ComparisonOperatorPattern} ${OperandPattern}`;
-
-export type Pattern =
-  | EmptyPattern
-  | AnyPattern
-  | HeadPattern
-  | HeadAndTailPattern
-  | LastPattern
-  | LastAndRestPattern
-  | LiteralPattern
-  | IdentifierPattern
-  | BinaryOperationPattern;
+export type Pattern = string;
 
 export type GetValue<Input = unknown, Output = unknown> = (
   value: Input
