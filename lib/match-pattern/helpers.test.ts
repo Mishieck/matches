@@ -90,6 +90,9 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
       expect('array.length === 1', toMatch(helpers.binaryOperationPattern));
       expect('map.size === 1', toMatch(helpers.binaryOperationPattern));
       expect('array.length < 1', toMatch(helpers.binaryOperationPattern));
+      expect('array["a"] === "a"', toMatch(helpers.binaryOperationPattern));
+      expect('array[0] < 1', toMatch(helpers.binaryOperationPattern));
+      expect('array[true] < 1', not(toMatch(helpers.binaryOperationPattern)));
     });
 
     it('should match truthy pattern', expect => {
