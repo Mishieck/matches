@@ -1,5 +1,6 @@
 import match, { type Entry } from '../match/match.ts';
-import { getMatcher, type PatternEntry } from './helpers.ts';
+import { getMatcher } from './helpers/get-matcher.ts';
+import type { PatternEntry } from './helpers/data-value-getters.ts';
 
 /**
  * Uses string pattern matching to conditionally execute code.

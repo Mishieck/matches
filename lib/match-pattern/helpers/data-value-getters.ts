@@ -1,15 +1,14 @@
-import * as matchHelpers from '../match/helpers.ts';
-import type { IsMatch, IsMatchSame, Inequable } from '../match/helpers.ts';
-import type { Compare } from '../match/match.types.ts';
-import type { GenericRecord } from '../types/data.types.ts';
-import * as regexes from './helpers/regexes.ts';
-import * as patternValueGetters from './helpers/pattern-value-getters.ts';
-
-export type Pattern = string;
+import * as matchHelpers from '../../match/helpers.ts';
+import type { Compare } from '../../match/match.types.ts';
+import type { Pattern } from '../../types/data.types.ts';
+import type { GenericRecord } from '../../types/data.types.ts';
+import * as regexes from './regexes.ts';
+import * as patternValueGetters from './pattern-value-getters.ts';
 
 export type GetValue<Input = unknown, Output = unknown> = (
   value: Input
 ) => Output;
+
 export type Matcher = [Compare, GetValue];
 export type HeadAndTail<Item> = [Item, Array<Item>];
 export type PatternEntry = [Pattern, CallableFunction];
@@ -17,6 +16,18 @@ export type PatternEntry = [Pattern, CallableFunction];
 export type IterableConstructor<Value = unknown> = new (
   arr?: Array<Value>
 ) => ThisType<Iterable<Value>>;
+
+export const binaryOps: Record<
+  string,
+  matchHelpers.IsMatch | matchHelpers.IsMatchSame<matchHelpers.Inequable>
+> = {
+  '<': matchHelpers.isLessThan,
+  '>': matchHelpers.isGreaterThan,
+  '<=': matchHelpers.isLessThanOrEqual,
+  '>=': matchHelpers.isGreaterThanOrEqual,
+  '===': matchHelpers.equals,
+  '!=': (value: unknown) => matchHelpers.not(matchHelpers.equals(value))
+};
 
 /**
  * Returns the argument passed to it.
@@ -28,7 +39,7 @@ export type IterableConstructor<Value = unknown> = new (
  * console.log(identity(1)); // 1
  * ```
  */
-const identity = (value: unknown) => value;
+export const identity = (value: unknown) => value;
 
 /**
  * Gets the item in an `ArrayLike` collection with only one item.
@@ -145,15 +156,6 @@ export const getProperty =
   object =>
     object[property];
 
-const binaryOps: Record<string, IsMatch | IsMatchSame<Inequable>> = {
-  '<': matchHelpers.isLessThan,
-  '>': matchHelpers.isGreaterThan,
-  '<=': matchHelpers.isLessThanOrEqual,
-  '>=': matchHelpers.isGreaterThanOrEqual,
-  '===': matchHelpers.equals,
-  '!=': (value: unknown) => matchHelpers.not(matchHelpers.equals(value))
-};
-
 export const getBinaryOpMatcher = (pattern: string): Matcher => {
   const [left, operator, right] = patternValueGetters.getMatches(
     pattern,
@@ -192,91 +194,3 @@ export const getPropertyValues =
     for (const key of keys) restValues[key] = object[key];
     return { [property]: object[property], [rest]: restValues };
   };
-
-/**
- * Gets utility functions for matching and extracting values from a given value.
- *
- * @param pattern - The string that represents a pattern to be matched against.
- * @returns an array with two functions. The first function takes a value and
- *   performs some comparison according to the `pattern`. The second value
- *   takes a value and returns, extracts or converts it to another value
- *   according to the `pattern`.
- * @example
- * ```ts
- * const numberLiteral = '1';
- * const [equals1, identity] = getMatcher(numberLiteral);
- * console.log(equals1(1)); // true
- * console.log(equals1(0)); // false
- * console.log(identity(1)); // 1
- * console.log(identity(0)); // 0
- * ```
- * @example
- * ```ts
- * const headAndTailPattern = '[head, ...tail]';
- * const [hasMinLength1, getHeadAndTail] = getMatcher(headAndTailPattern);
- * console.log(hasMinLength1([1, 2])); // true
- * console.log(hasMinLength1([])); // false
- * console.log(getHeadAndTail([1, 2])); // [1, [2]]
- * console.log(getHeadAndTail([1])); // [1, []]
- * ```
- */
-export const getMatcher = (pattern: Pattern): Matcher => {
-  switch (true) {
-    case matchHelpers.matches(regexes.literalPattern)(pattern):
-      return [
-        matchHelpers.equals(patternValueGetters.getLiteral(pattern)) as Compare,
-        identity
-      ];
-    case matchHelpers.matches(regexes.anyPattern)(pattern):
-      return [matchHelpers.isAny(), identity];
-    case matchHelpers.matches(regexes.emptyPattern)(pattern):
-      return [matchHelpers.hasLength(0) as Compare, identity];
-    case matchHelpers.matches(regexes.headPattern)(pattern):
-      return [matchHelpers.hasLength(1) as Compare, getOnlyItem];
-    case matchHelpers.matches(regexes.headAndTailPattern)(pattern):
-      return [
-        matchHelpers.hasMinLength(1) as Compare,
-        getHeadAndTail as GetValue
-      ];
-    case matchHelpers.matches(regexes.lastPattern)(pattern):
-      return [matchHelpers.hasMinLength(1) as Compare, getLast];
-    case matchHelpers.matches(regexes.lastAndRestPattern)(pattern):
-      return [
-        matchHelpers.hasMinLength(1) as Compare,
-        getLastAndRest as GetValue
-      ];
-    case matchHelpers.matches(regexes.binaryOperationPattern)(pattern):
-      return getBinaryOpMatcher(pattern);
-    case matchHelpers.matches(regexes.truthyPattern)(pattern):
-      return [matchHelpers.isTruthy(), identity];
-    case matchHelpers.matches(regexes.falsyPattern)(pattern):
-      return [matchHelpers.isFalsy(), identity];
-    case matchHelpers.matches(regexes.existPattern)(pattern):
-      return [matchHelpers.exists(), identity];
-    case matchHelpers.matches(regexes.regexPattern)(pattern):
-      return [
-        matchHelpers.matches(patternValueGetters.getRegex(pattern)) as Compare,
-        identity
-      ];
-    case matchHelpers.matches(regexes.objectPropertyPattern)(pattern):
-      return [
-        matchHelpers.hasProperty(
-          patternValueGetters.getObjectProperty(pattern)
-        ) as Compare,
-        getProperty(patternValueGetters.getObjectProperty(pattern)) as GetValue
-      ];
-    case matchHelpers.matches(regexes.objectPropertiesPattern)(pattern): {
-      const properties = patternValueGetters.getObjectProperties(pattern);
-
-      return [
-        matchHelpers.hasProperty(properties[0]) as Compare,
-        getPropertyValues(properties) as GetValue
-      ];
-    }
-    default:
-      return [
-        matchHelpers.isAny(),
-        () => new Error(`Invalid pattern ${pattern}`)
-      ];
-  }
-};
