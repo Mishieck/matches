@@ -1,7 +1,6 @@
 import * as regexes from './regexes.ts';
 
 export type PatternValueGetter<Value = unknown> = (pattern: string) => Value;
-export type Pattern = string;
 export type BinaryTerms = [string | number, string, string];
 
 /**
