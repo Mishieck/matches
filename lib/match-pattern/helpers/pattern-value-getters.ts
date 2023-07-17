@@ -113,6 +113,22 @@ export const getObjectProperty: PatternValueGetter<string> = pattern =>
     ''
   );
 
+/**
+ * Gets the specified property and the property name for the rest of the
+ *   values an object.
+ *
+ * @param pattern - A string pattern containing a property and the property
+ *   for the rest of the properties.
+ * @returns an array containing 2 values. The first value is the specified
+ *   property. The second value is the name of the property for the rest of
+ *   the values.
+ * @example
+ * ```ts
+ * getObjectProperties('{ name, ...rest }'); // ['name', 'rest']
+ * getObjectProperties('{ ["computed-property"], ...rest }'); // ['computed-property', 'rest
+ * getObjectProperties('{ [0], ...rest }'); // ['0', 'rest']
+ * ```
+ */
 export const getObjectProperties: PatternValueGetter<
   [string, string]
 > = pattern => {
