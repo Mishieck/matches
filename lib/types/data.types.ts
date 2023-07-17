@@ -4,3 +4,5 @@ export type GenericRecord<
   Key extends RecordKey = RecordKey,
   Value = unknown
 > = Record<Key, Value>;
+
+export type Pattern = string;
