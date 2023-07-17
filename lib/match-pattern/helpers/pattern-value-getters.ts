@@ -35,6 +35,17 @@ export const getLiteral = (value: string) => {
   return func();
 };
 
+/**
+ * Creates a regex from a string.
+ *
+ * @param literal - A string containing a regex literal.
+ * @returns a regex.
+ * @example
+ * ```ts
+ * getRegex('/\\b/'); // /\b/
+ * getRegex('/[a-z]/i'); // /[a-z]/i
+ * ```
+ */
 export const getRegex = (literal: string) => {
   const [regex, flags] = getMatches(literal, regexes.regexPattern);
   return new RegExp(regex, flags);
