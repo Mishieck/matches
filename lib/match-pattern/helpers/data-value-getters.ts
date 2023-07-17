@@ -167,32 +167,6 @@ export const getProperty =
   object =>
     object[property];
 
-export const getBinaryOpMatcher = (pattern: string): Matcher => {
-  const [left, operator, right] = patternValueGetters.getMatches(
-    pattern,
-    regexes.binaryOperationPattern
-  );
-  const propertyAccessPattern = /(\.[_a-zA-Z$][\w$]*|\[.+\])/;
-  // console.log({ operator });
-  // console.log({ right });
-  const value = patternValueGetters.getLiteral(right);
-  const compare = binaryOps[operator](value) as Compare;
-  let getValue: GetValue = identity;
-
-  if (propertyAccessPattern.test(left)) {
-    let property: string | number = left.replace(/^[\w$]+/, '');
-
-    if (property.startsWith('.')) property = property.substring(1);
-    else if (property.startsWith('["'))
-      property = property.replaceAll(/^\["|"\]$/g, '');
-    else property = Number(property.replaceAll(/^\[|\]$/g, ''));
-
-    getValue = getProperty(property) as GetValue;
-  }
-  // console.log({ value });
-  return [compare, getValue];
-};
-
 export const getPropertyValues =
   ([property, rest]: [string, string]): GetValue<
     GenericRecord,
