@@ -151,6 +151,17 @@ export const getLastAndRest: GetValue<Iterable<unknown>> = iterable => {
   }
 };
 
+/**
+ * Gets a the value of a given key from a `Record`.
+ *
+ * @param property - The property whose value to get.
+ * @returns a function that a `Record` and returns the value of the given
+ *   `property`.
+ * @example
+ * ```ts
+ * getProperty('name')({ name: 'match' }); // 'match'
+ * ```
+ */
 export const getProperty =
   (property: string | number): GetValue<GenericRecord> =>
   object =>
