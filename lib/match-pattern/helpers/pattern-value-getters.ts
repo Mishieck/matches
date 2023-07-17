@@ -51,6 +51,25 @@ export const getRegex = (literal: string) => {
   return new RegExp(regex, flags);
 };
 
+/**
+ * Gets the terms in a binary expression.
+ *
+ * @param pattern - A string pattern containing a binary expression.
+ * @returns an array containing the 3 terms of a binary expression. The first
+ *   value the left operand. The second value is the operator. The third value
+ *   is the right operand. If the left operand is an identifier, an empty
+ *   string is set as the left operand in the output. If the left operand is
+ *   a property accessor, the property is set to the left operand in the
+ *   result. The second operand is evaluated in the result.
+ * @example
+ * ```ts
+ * getBinaryTerms('value < 1'); // ['', '<', 1]
+ * getBinaryTerms('object.property === 'match'); // ['property', '===', 'match']
+ * getBinaryTerms('object["property"] === 'match'); // ['property', '===', 'match']
+ * getBinaryTerms('array[0] > 1'); // [0, '>' 1]
+ * getBinaryTerms('value === null'); // ['', '===', null]
+ * ```
+ */
 export const getBinaryTerms: PatternValueGetter<BinaryTerms> = pattern => {
   const [left, operator, right] = getMatches(
     pattern,
