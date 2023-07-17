@@ -167,12 +167,26 @@ export const getProperty =
   object =>
     object[property];
 
+/**
+ * Gets a the value of a specified property and the values of the rest
+ *   of the properties.
+ *
+ * @param properties - An array containing two values. The first value is the
+ *   name of the specific property whose value to get. The second value is the
+ *   name to which to assign the rest of the properties.
+ * @returns a function that takes a `Record` as an argument. The function
+ *   returns a `Record` containing the `properties` and their values. The rest
+ *   of the properties are put into a `Record` and assigned to the second value
+ *   of `properties`.
+ * @example
+ * ```ts
+ * getPropertyValues(['func', 'rest'])({ func: 'match', library: 'matches' }); // { func: 'match', rest: { library: 'matches' }}
+ * ```
+ */
 export const getPropertyValues =
-  ([property, rest]: [string, string]): GetValue<
-    GenericRecord,
-    GenericRecord
-  > =>
+  (properties: [string, string]): GetValue<GenericRecord, GenericRecord> =>
   object => {
+    const [property, rest] = properties;
     const keys = Object.keys(object);
     keys.splice(keys.indexOf(property), 1);
     const restValues: GenericRecord = {};
