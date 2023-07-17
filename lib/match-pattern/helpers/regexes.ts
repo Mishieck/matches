@@ -14,6 +14,7 @@ export const truthyPattern = /^\?$/;
 export const falsyPattern = /^!$/;
 export const existPattern = /^\?\?$/;
 export const regexPattern = /^\/((?:\\\/|[^\/])+)\/([gimsuy]*)$/;
-export const objectPropertyPattern = /^{\s?([_a-zA-Z$][\w$]*)\s?}$/;
+export const objectPropertyPattern =
+  /^{\s?([_a-zA-Z$][\w$]*|\[".+"\]|\[.+\])\s?}$/;
 export const objectPropertiesPattern =
-  /^{\s?([_a-zA-Z$][\w$]*),\s\.\.\.([_a-zA-Z$][\w$]*)\s?}$/;
+  /^{\s?([_a-zA-Z$][\w$]*|\[".+"\]|\[.+\]),\s\.\.\.([_a-zA-Z$][\w$]*)\s?}$/;

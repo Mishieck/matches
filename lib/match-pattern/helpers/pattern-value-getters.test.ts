@@ -41,8 +41,18 @@ export const runPatternValueGetterTests: ModuleRunner = describe => {
 
   describe('getObjectProperty', it => {
     it('should get object property', expect => {
-      const property = patternValueGetters.getObjectProperty('{property}');
-      expect(property, toEqual('property'));
+      const simpleProperty =
+        patternValueGetters.getObjectProperty('{property}');
+
+      const stringProperty = patternValueGetters.getObjectProperty(
+        '{["property-name"]}'
+      );
+
+      const numberProperty = patternValueGetters.getObjectProperty('{[0]}');
+
+      expect(simpleProperty, toEqual('property'));
+      expect(stringProperty, toEqual('property-name'));
+      expect(numberProperty, toEqual('0'));
     });
   });
 
@@ -51,7 +61,21 @@ export const runPatternValueGetterTests: ModuleRunner = describe => {
       const properties = patternValueGetters.getObjectProperties(
         '{ property, ...rest }'
       );
+
+      const propertiesWithStringProperty =
+        patternValueGetters.getObjectProperties(
+          '{ ["computed-property"], ...rest }'
+        );
+
+      const propertiesWithNumberProperty =
+        patternValueGetters.getObjectProperties('{ [0], ...rest }');
+
       expect(properties, toEqual(['property', 'rest']));
+      expect(
+        propertiesWithStringProperty,
+        toEqual(['computed-property', 'rest'])
+      );
+      expect(propertiesWithNumberProperty, toEqual(['0', 'rest']));
     });
   });
 

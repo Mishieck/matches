@@ -96,20 +96,26 @@ export const getBinaryTerms: PatternValueGetter<BinaryTerms> = pattern => {
 /**
  * Gets the object property from a pattern.
  *
- * @param pattern - A string pattern for an object property.
- * @returns the object property.
+ * @param pattern - A string pattern for an object property. Computed
+ *   properties are allowed.
+ * @returns the object property. The value is always a string.
  * @example
  * ```ts
  * getObjectProperty('{ name }'); // 'name'
  * getObjectProperty('{name}'); // 'name'
+ * getObjectProperty('{"computed-property"}'); // 'computed-string-property'
+ * getObjectProperty('{[0]}'); // '0'
  * ```
  */
 export const getObjectProperty: PatternValueGetter<string> = pattern =>
-  getMatches(pattern, regexes.objectPropertyPattern)[0];
+  getMatches(pattern, regexes.objectPropertyPattern)[0].replaceAll(
+    /["\[\]]/g,
+    ''
+  );
 
 export const getObjectProperties: PatternValueGetter<
   [string, string]
 > = pattern => {
   const [property, rest] = getMatches(pattern, regexes.objectPropertiesPattern);
-  return [property, rest];
+  return [property.replaceAll(/["\[\]]/g, ''), rest];
 };
