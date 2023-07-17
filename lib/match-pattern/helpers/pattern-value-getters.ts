@@ -1,6 +1,8 @@
 import * as regexes from './regexes.ts';
 
 export type PatternValueGetter<Value = unknown> = (pattern: string) => Value;
+export type Pattern = string;
+export type BinaryTerms = [string | number, string, string];
 
 /**
  * Gets the parts of a string that matches the groups in a regex.
@@ -37,6 +39,29 @@ export const getLiteral = (value: string) => {
 export const getRegex = (literal: string) => {
   const [regex, flags] = getMatches(literal, regexes.regexPattern);
   return new RegExp(regex, flags);
+};
+
+export const getBinaryTerms: PatternValueGetter<BinaryTerms> = pattern => {
+  const [left, operator, right] = getMatches(
+    pattern,
+    regexes.binaryOperationPattern
+  );
+
+  const propertyAccessPattern = /(\.[_a-zA-Z$][\w$]*|\[.+\])/;
+  // console.log({ operator });
+  // console.log({ right });
+  const value = getLiteral(right);
+
+  let property: string | number = left.replace(/^[\w$]+/, '');
+
+  if (propertyAccessPattern.test(left)) {
+    if (property.startsWith('.')) property = property.substring(1);
+    else if (property.startsWith('["'))
+      property = property.replaceAll(/^\["|"\]$/g, '');
+    else property = Number(property.replaceAll(/^\[|\]$/g, ''));
+  }
+
+  return [property, operator, value];
 };
 
 export const getObjectProperty: PatternValueGetter<string> = pattern =>

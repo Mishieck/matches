@@ -1,4 +1,4 @@
-import { mod, toEqual, type ModuleRunner } from '../../../deps.ts';
+import { mod, toEqual, type ModuleRunner, expect } from '../../../deps.ts';
 import * as patternValueGetters from './pattern-value-getters.ts';
 
 export const runPatternValueGetterTests: ModuleRunner = describe => {
@@ -52,6 +52,52 @@ export const runPatternValueGetterTests: ModuleRunner = describe => {
         '{ property, ...rest }'
       );
       expect(properties, toEqual(['property', 'rest']));
+    });
+  });
+
+  describe('getBinaryTerms', it => {
+    it('should get binary terms for primitives', expect => {
+      expect(
+        patternValueGetters.getBinaryTerms('value < 1'),
+        toEqual(['', '<', 1])
+      );
+
+      expect(
+        patternValueGetters.getBinaryTerms('value < 1n'),
+        toEqual(['', '<', 1n])
+      );
+
+      expect(
+        patternValueGetters.getBinaryTerms('value === "match"'),
+        toEqual(['', '===', 'match'])
+      );
+
+      expect(
+        patternValueGetters.getBinaryTerms('value != null'),
+        toEqual(['', '!=', null])
+      );
+    });
+
+    it('should get binary terms for property access', expect => {
+      expect(
+        patternValueGetters.getBinaryTerms('object.property === "value"'),
+        toEqual(['property', '===', 'value'])
+      );
+
+      expect(
+        patternValueGetters.getBinaryTerms('array[0] === 1'),
+        toEqual([0, '===', 1])
+      );
+
+      expect(
+        patternValueGetters.getBinaryTerms('array[0] < 1'),
+        toEqual([0, '<', 1])
+      );
+
+      expect(
+        patternValueGetters.getBinaryTerms('object["property"] === "value"'),
+        toEqual(['property', '===', 'value'])
+      );
     });
   });
 };
