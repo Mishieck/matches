@@ -43,6 +43,9 @@ export const runDataValueGetterTests: ModuleRunner = describe => {
       expect(helpers.getLast('match'), toEqual('h'));
       expect(helpers.getLast('m'), toEqual('m'));
       expect(helpers.getLast(['match', 'pattern']), toEqual('pattern'));
+      expect(helpers.getLast(new Set([1])), toEqual(1));
+      expect(helpers.getLast(new Set([1, 2])), toEqual(2));
+      expect(helpers.getLast(new Map([[1, 2]])), toEqual([1, 2]));
     });
 
     it('should get the last and the rest of the elements of an iterable', expect => {

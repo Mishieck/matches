@@ -1,4 +1,5 @@
 import * as matchHelpers from '../../match/helpers.ts';
+import type { MapOrSet } from '../../match/helpers.ts';
 import type { Compare } from '../../match/match.types.ts';
 import type { Pattern } from '../../types/data.types.ts';
 import type { GenericRecord } from '../../types/data.types.ts';
@@ -105,9 +106,15 @@ export const getHeadAndTail: GetValue<Iterable<unknown>> = iterable => {
  * console.log(getLast('match')); // 'h'
  * ```
  */
-export const getLast: GetValue = arrayLike => {
-  const al = arrayLike as ArrayLike<unknown>;
-  return al[al.length - 1];
+export const getLast: GetValue<Iterable<unknown>> = iterable => {
+  if (typeof iterable === 'object' && 'length' in iterable)
+    return (iterable as unknown as ArrayLike<unknown>)[
+      (iterable as unknown as ArrayLike<unknown>).length - 1
+    ];
+
+  let lastElement: unknown;
+  for (const element of iterable) lastElement = element;
+  return lastElement;
 };
 
 /**

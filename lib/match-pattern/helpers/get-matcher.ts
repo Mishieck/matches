@@ -57,7 +57,7 @@ export const getMatcher = (pattern: Pattern): Matcher => {
     case matchHelpers.matches(regexes.lastPattern)(pattern):
       return [
         matchHelpers.hasMinLength(1) as Compare,
-        dataValueGetters.getLast
+        dataValueGetters.getLast as GetValue
       ];
     case matchHelpers.matches(regexes.lastAndRestPattern)(pattern):
       return [
