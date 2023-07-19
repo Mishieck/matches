@@ -43,7 +43,7 @@ export const getMatcher = (pattern: Pattern): Matcher => {
     case matchHelpers.matches(regexes.anyPattern)(pattern):
       return [matchHelpers.isAny(), dataValueGetters.identity];
     case matchHelpers.matches(regexes.emptyPattern)(pattern):
-      return [matchHelpers.hasLength(0) as Compare, dataValueGetters.identity];
+      return [matchHelpers.isEmpty() as Compare, dataValueGetters.identity];
     case matchHelpers.matches(regexes.headPattern)(pattern):
       return [
         matchHelpers.hasAtLeastOneElement() as Compare,
