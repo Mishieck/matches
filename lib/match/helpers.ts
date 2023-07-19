@@ -352,12 +352,12 @@ export const isNull: IsMatchOne = () => value => value === null;
  *   `false` otherwise.
  * @example
  * ```ts
- * exists()(1) // true
- * exists()(null) // false
- * exists()(undefined) // false
+ * isNonNullish()(1) // true
+ * isNonNullish()(null) // false
+ * isNonNullish()(undefined) // false
  * ```
  */
-export const exists: IsMatchOne = () => value =>
+export const isNonNullish: IsMatchOne = () => value =>
   value !== undefined && value !== null;
 
 /**
@@ -619,7 +619,7 @@ export const none: IsMatch<ReturnType<IsMatch>, Iterable<unknown>> =
  *
  * @param property - The property to check.
  * @returns - a function that takes a `Record` as an argument and returns a
- *   boolean that indicates whether the `property` exists on the record or
+ *   boolean that indicates whether the `property` isNonNullish on the record or
  *   not.
  * @example
  * ```ts

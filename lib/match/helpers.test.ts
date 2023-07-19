@@ -34,10 +34,10 @@ export const runMatchHelpers: ModuleRunner = describe => {
     });
 
     it('should handle nullish values', expect => {
-      expect(helpers.exists()(true), toEqual(true));
-      expect(helpers.exists()(false), toEqual(true));
-      expect(helpers.exists()(null), toEqual(false));
-      expect(helpers.exists()(undefined), toEqual(false));
+      expect(helpers.isNonNullish()(true), toEqual(true));
+      expect(helpers.isNonNullish()(false), toEqual(true));
+      expect(helpers.isNonNullish()(null), toEqual(false));
+      expect(helpers.isNonNullish()(undefined), toEqual(false));
     });
 
     it('should handle negation', expect => {

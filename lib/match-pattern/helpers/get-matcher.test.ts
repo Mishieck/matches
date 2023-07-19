@@ -111,14 +111,14 @@ export const runMatchPatternHelpers: ModuleRunner = describe => {
     });
 
     it('should get matcher for exist', expect => {
-      const [exists] = helpers.getMatcher('??');
+      const [isNonNullish] = helpers.getMatcher('??');
 
-      expect(exists(true), toEqual(true));
-      expect(exists(false), toEqual(true));
-      expect(exists(1), toEqual(true));
-      expect(exists(0), toEqual(true));
-      expect(exists(null), toEqual(false));
-      expect(exists(undefined), toEqual(false));
+      expect(isNonNullish(true), toEqual(true));
+      expect(isNonNullish(false), toEqual(true));
+      expect(isNonNullish(1), toEqual(true));
+      expect(isNonNullish(0), toEqual(true));
+      expect(isNonNullish(null), toEqual(false));
+      expect(isNonNullish(undefined), toEqual(false));
     });
 
     it('should get matcher for regex', expect => {

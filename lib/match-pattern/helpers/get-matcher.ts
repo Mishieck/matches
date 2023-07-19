@@ -81,7 +81,7 @@ export const getMatcher = (pattern: Pattern): Matcher => {
     case matchHelpers.matches(regexes.falsyPattern)(pattern):
       return [matchHelpers.isFalsy(), dataValueGetters.identity];
     case matchHelpers.matches(regexes.existPattern)(pattern):
-      return [matchHelpers.exists(), dataValueGetters.identity];
+      return [matchHelpers.isNonNullish(), dataValueGetters.identity];
     case matchHelpers.matches(regexes.regexPattern)(pattern):
       return [
         matchHelpers.matches(patternValueGetters.getRegex(pattern)) as Compare,
