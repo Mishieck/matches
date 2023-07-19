@@ -9,12 +9,12 @@ export const lastAndRestPattern =
 export const literalPattern =
   /(^['"].*['"]$|^\-?\d+$|^\-?\d+n$|^true$|^false$|^null$|^undefined$)/;
 export const binaryOperationPattern =
-  /(^[_a-zA-Z$][\w$]*(?:\.[_a-zA-Z$][\w$]*|\[(?:".*"|\d+)\])?)\s([<>]|<=|>=|==|===|!=)\s(.*)/;
+  /(^[_a-zA-Z$][\w$]*(?:\.[_a-zA-Z$][\w$]*|\[(?:".*"|\d+)\])?)\s+([<>]|<=|>=|==|===|!=)\s+(.*)/;
 export const truthyPattern = /^\?$/;
 export const falsyPattern = /^!$/;
 export const existPattern = /^\?\?$/;
 export const regexPattern = /^\/((?:\\\/|[^\/])+)\/([gimsuy]*)$/;
 export const objectPropertyPattern =
-  /^{\s?([_a-zA-Z$][\w$]*|\[".+"\]|\[.+\])\s?}$/;
+  /^{\s*([_a-zA-Z$][\w$]*|\[".+"\]|\[.+\])\s*}$/;
 export const objectPropertiesPattern =
-  /^{\s?([_a-zA-Z$][\w$]*|\[".+"\]|\[.+\]),\s\.\.\.([_a-zA-Z$][\w$]*)\s?}$/;
+  /^{\s*([_a-zA-Z$][\w$]*|\[".+"\]|\[.+\]),\s*\.\.\.([_a-zA-Z$][\w$]*)\s*}$/;

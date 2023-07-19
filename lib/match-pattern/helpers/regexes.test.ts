@@ -47,6 +47,7 @@ export const runRegexesTests: ModuleRunner = describe => {
       expect('[..._, _last]', toMatch(regexes.lastPattern));
       expect('[..._, $last]', toMatch(regexes.lastPattern));
       expect('[..._, last1]', toMatch(regexes.lastPattern));
+      expect('[..._,   last]', toMatch(regexes.lastPattern));
       expect('[..._, 1last]', not(toMatch(regexes.lastPattern)));
       expect('[last]', not(toMatch(regexes.lastPattern)));
       expect('[..._]', not(toMatch(regexes.lastPattern)));
@@ -54,6 +55,7 @@ export const runRegexesTests: ModuleRunner = describe => {
 
     it('should match last and rest pattern', expect => {
       expect('[...rest, last]', toMatch(regexes.lastAndRestPattern));
+      expect('[...rest,   last]', toMatch(regexes.lastAndRestPattern));
       expect('[...rest, _last]', toMatch(regexes.lastAndRestPattern));
       expect('[...rest, $last]', toMatch(regexes.lastAndRestPattern));
       expect('[...rest, last1]', toMatch(regexes.lastAndRestPattern));
@@ -79,6 +81,7 @@ export const runRegexesTests: ModuleRunner = describe => {
 
     it('should match binary pattern', expect => {
       expect('value === 1', toMatch(regexes.binaryOperationPattern));
+      expect('value   ===   1', toMatch(regexes.binaryOperationPattern));
       expect('value != 1', toMatch(regexes.binaryOperationPattern));
       expect('value < 1', toMatch(regexes.binaryOperationPattern));
       expect('value <= 1', toMatch(regexes.binaryOperationPattern));
@@ -119,12 +122,17 @@ export const runRegexesTests: ModuleRunner = describe => {
     it('should match object property pattern', expect => {
       expect(`{property}`, toMatch(regexes.objectPropertyPattern));
       expect('{ property }', toMatch(regexes.objectPropertyPattern));
+      expect('{  property  }', toMatch(regexes.objectPropertyPattern));
       expect('{}', not(toMatch(regexes.objectPropertyPattern)));
     });
 
     it('should match object properties pattern', expect => {
       expect(`{property, ...rest}`, toMatch(regexes.objectPropertiesPattern));
       expect('{ property, ...rest }', toMatch(regexes.objectPropertiesPattern));
+      expect(
+        '{   prop,   ...rest   }',
+        toMatch(regexes.objectPropertiesPattern)
+      );
       expect('{property}', not(toMatch(regexes.objectPropertiesPattern)));
       expect('{...rest}', not(toMatch(regexes.objectPropertiesPattern)));
     });
