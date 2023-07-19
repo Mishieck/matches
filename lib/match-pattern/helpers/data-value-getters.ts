@@ -51,8 +51,9 @@ export const identity = (value: unknown) => value;
  * console.log(getOnlyItem([1])); // 1
  * ```
  */
-export const getOnlyItem: GetValue = arrayLike =>
-  (arrayLike as ArrayLike<unknown>)[0];
+export const getOnlyItem: GetValue = iterable => {
+  for (const item of iterable as Iterable<unknown>) return item;
+};
 
 /**
  * Gets the head and tail of an `Iterable`.

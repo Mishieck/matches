@@ -239,6 +239,18 @@ export const runMatchHelpers: ModuleRunner = describe => {
         toEqual(true)
       );
     });
+
+    it('should handle iterables having at least 1 element', expect => {
+      expect(helpers.hasAtLeastOneElement()([1]), toEqual(true));
+      expect(helpers.hasAtLeastOneElement()([1, 2]), toEqual(true));
+      expect(helpers.hasAtLeastOneElement()('m'), toEqual(true));
+      expect(helpers.hasAtLeastOneElement()('match'), toEqual(true));
+      expect(helpers.hasAtLeastOneElement()(new Set([1])), toEqual(true));
+      expect(
+        helpers.hasAtLeastOneElement()(new Map([[1, true]])),
+        toEqual(true)
+      );
+    });
   });
 };
 

@@ -3,12 +3,14 @@ import * as helpers from './data-value-getters.ts';
 
 export const runDataValueGetterTests: ModuleRunner = describe => {
   describe('Value Getters', it => {
-    it('should get head of array-like collection', expect => {
+    it('should get head of an iterable collection', expect => {
       expect(helpers.getOnlyItem([1]), toEqual(1));
       expect(helpers.getOnlyItem([1]), toEqual(1));
       expect(helpers.getOnlyItem('match'), toEqual('m'));
       expect(helpers.getOnlyItem('m'), toEqual('m'));
       expect(helpers.getOnlyItem(['match', 'pattern']), toEqual('match'));
+      expect(helpers.getOnlyItem(new Set([1])), toEqual(1));
+      expect(helpers.getOnlyItem(new Map([[1, true]])), toEqual([1, true]));
     });
 
     it('should get head and tail of iterables', expect => {

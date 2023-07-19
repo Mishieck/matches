@@ -46,12 +46,12 @@ export const getMatcher = (pattern: Pattern): Matcher => {
       return [matchHelpers.hasLength(0) as Compare, dataValueGetters.identity];
     case matchHelpers.matches(regexes.headPattern)(pattern):
       return [
-        matchHelpers.hasLength(1) as Compare,
+        matchHelpers.hasAtLeastOneElement() as Compare,
         dataValueGetters.getOnlyItem
       ];
     case matchHelpers.matches(regexes.headAndTailPattern)(pattern):
       return [
-        matchHelpers.hasMinLength(1) as Compare,
+        matchHelpers.hasAtLeastOneElement() as Compare,
         dataValueGetters.getHeadAndTail as GetValue
       ];
     case matchHelpers.matches(regexes.lastPattern)(pattern):

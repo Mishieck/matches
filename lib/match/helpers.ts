@@ -529,6 +529,12 @@ export const hasMinSize: IsMatch<number, MapOrSet> = size => mapOrSet =>
 export const hasMaxSize: IsMatch<number, MapOrSet> = size => mapOrSet =>
   mapOrSet.size <= size;
 
+export const hasAtLeastOneElement: IsMatchOne<Iterable<unknown>> =
+  () => iterable => {
+    for (const _ of iterable) return true;
+    return false;
+  };
+
 /**
  * Checks if an `Iterable` has a given item.
  * @param value - The value to check for in the `Iterable`.
