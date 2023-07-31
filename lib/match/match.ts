@@ -63,7 +63,7 @@ const match =
       const matches =
         typeof isMatch === 'function'
           ? isMatch(value)
-          : isMatch.every(matches => matches(value));
+          : isMatch.some(matches => matches(value));
 
       if (matches) return handleMatch(value);
     }

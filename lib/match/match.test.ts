@@ -7,6 +7,7 @@ export const runMatch: ModuleRunner = describe => {
   describe('match', it => {
     const isEqualTo1: Compare = value => value === 1;
     const isNumber: Compare = value => typeof value == 'number';
+    const isString: Compare = value => typeof value == 'string';
     const constant = () => 1;
 
     it('should handle single matchers', expect => {
@@ -23,11 +24,13 @@ export const runMatch: ModuleRunner = describe => {
       const setValue = (val: number) => (value = val);
 
       expect(match(1)([[isNumber, isEqualTo1], setValue]), toEqual(1));
+      expect(match(0)([[isNumber, isEqualTo1], constant]), toEqual(1));
+      expect(value, toEqual(1));
+
       expect(
-        match(0)([[isNumber, isEqualTo1], constant]),
+        match(0)([[isEqualTo1, isString], constant]),
         toBeInstanceOf(Error)
       );
-      expect(value, toEqual(1));
     });
 
     it('should pick the first match', expect => {
