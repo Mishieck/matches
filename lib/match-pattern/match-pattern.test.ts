@@ -1,5 +1,8 @@
 import { mod, toEqual, type ModuleRunner, toBeInstanceOf } from '../../deps.ts';
-import type { PatternEntry, HeadAndTail } from './helpers.ts';
+import type {
+  PatternEntry,
+  HeadAndTail
+} from './helpers/data-value-getters.ts';
 import matchPattern from './match-pattern.ts';
 
 export const runMatch: ModuleRunner = describe => {
