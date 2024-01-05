@@ -1,5 +1,5 @@
-import { toEqual, type ModuleRunner, mod, expect } from '../../deps.ts';
-import * as helpers from './helpers.ts';
+import { toEqual, type ModuleRunner, mod } from '../deps.ts';
+import * as helpers from './functions.ts';
 
 export const runMatchHelpers: ModuleRunner = describe => {
   describe('Helpers', it => {

@@ -1,5 +1,5 @@
-import type { GenericRecord } from '../types/data.types.ts';
-import type { Compare } from './match.types.ts';
+import type { GenericRecord } from './types/data.types.ts';
+import type { Compare } from './types/match.types.ts';
 
 export type DataType =
   | 'bigint'
