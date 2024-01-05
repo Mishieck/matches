@@ -35,7 +35,7 @@ const sections: Array<MdSection> = [
   ['Types', typeNames]
 ];
 
-const api = `# API\n\n${sections
+const api = `## API\n\n${sections
   .map(section => createMdSection(...section))
   .join('\n\n')}`;
 
