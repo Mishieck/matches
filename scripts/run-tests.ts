@@ -3,10 +3,10 @@ import {
   type ModuleImporter,
   type TestModule,
   type TestRunner
-} from './deps.ts';
+} from '../deps.ts';
 
 const { createTestRunner, isTSFile } = run;
-const relative = './'; // Relative path of entry directory
+const relative = '../'; // Relative path of entry directory
 // Absolute path of entry directory
 // Checkout run.getPaths for equivalent in Node
 const absolute = new URL(relative, import.meta.url).pathname;
