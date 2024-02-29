@@ -12,5 +12,23 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - run: deno publish
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Deno dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.deno
+            # Add other relevant paths here
+          key: deno-${{ runner.os }}-${{ hashFiles('**/deno.lock') }}
+
+      - name: Install Deno
+        run: curl -fsSL https://deno.land/x/install/install.sh | sh
+
+      - name: Check Deno version
+        run: deno --version
+
+      - name: Publish
+        run: deno publish
+
