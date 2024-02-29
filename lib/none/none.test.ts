@@ -6,7 +6,7 @@ import { Compare } from '../types/match.types.ts';
 
 export const runNone: ModuleRunner = describe => {
   describe('none', it => {
-    it('should check if each item in an iterable does not satisfy a particular condition', expect => {
+    it('should check if none of the items in an iterable satisfies a particular condition', expect => {
       expect(none(equals(2))([1]), toEqual(true));
       expect(none(equals(2))([1, 1]), toEqual(true));
       expect(none(equals('b'))('cc'), toEqual(true));

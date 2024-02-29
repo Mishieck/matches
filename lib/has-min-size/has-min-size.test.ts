@@ -3,7 +3,7 @@ import { hasMinSize } from './has-min-size.ts';
 
 export const runHasMinSize: ModuleRunner = describe => {
   describe('hasMinSize', it => {
-    it('should check if a set or map has a given size', expect => {
+    it('should check if a set or map has size greater than or equal to a given size', expect => {
       expect(hasMinSize(1)(new Set([1])), toEqual(true));
       expect(hasMinSize(1)(new Map([[1, 1]])), toEqual(true));
     });

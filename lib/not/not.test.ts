@@ -4,7 +4,7 @@ import { not } from './not.ts';
 
 export const runNot: ModuleRunner = describe => {
   describe('not', it => {
-    it('should handle negation', expect => {
+    it('should invert checks', expect => {
       expect(not(equals(true))(false), toEqual(true));
       expect(not(equals(1))(2), toEqual(true));
       expect(not(equals(1))(1), toEqual(false));

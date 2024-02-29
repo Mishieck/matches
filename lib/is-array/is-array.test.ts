@@ -3,7 +3,7 @@ import { isArray } from './is-array.ts';
 
 export const runIsArray: ModuleRunner = describe => {
   describe('isArray', it => {
-    it('should check if a given value is array', expect => {
+    it('should check if a given value is an array', expect => {
       expect(isArray()([]), toEqual(true));
       expect(isArray()(''), toEqual(false));
     });

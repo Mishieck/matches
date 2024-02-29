@@ -3,7 +3,7 @@ import { isInstanceOf } from './is-instance-of.ts';
 
 export const runIsInstanceOf: ModuleRunner = describe => {
   describe('isInstanceOf', it => {
-    it('should check if a given value is an instance of a class', expect => {
+    it('should check if a given value is an instance of a given class', expect => {
       expect(isInstanceOf(Object)({}), toEqual(true));
       expect(isInstanceOf(Object)([]), toEqual(true));
       expect(isInstanceOf(Array)([]), toEqual(true));

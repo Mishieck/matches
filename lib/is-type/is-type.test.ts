@@ -3,7 +3,7 @@ import { isType } from './is-type.ts';
 
 export const runIsType: ModuleRunner = describe => {
   describe('isType', it => {
-    it('should handle data types', expect => {
+    it('should check if a value is of a particular type', expect => {
       expect(isType('bigint')(1n), toEqual(true));
       expect(isType('boolean')(true), toEqual(true));
       expect(
