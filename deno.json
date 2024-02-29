@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "exports": "./mod.ts",
   "tasks": {
-    "test": "deno run --allow-read --allow-env run-tests.ts",
-    "create-docs": "deno run -A create-docs.ts"
+    "test": "deno run --allow-read --allow-env run-tests.ts"
   }
 }
