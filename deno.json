@@ -1,0 +1,16 @@
+{
+  "name": "@mishieck/matches",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "tasks": {
+    "test": "deno run --allow-read --allow-env scripts/run-tests.ts",
+    "gen-api": "deno run -A scripts/generate-api.ts"
+  },
+  "exclude": [
+    "**/*.test.ts",
+    "scripts",
+    "mod.template.ts",
+    "run-tests.ts",
+    "deps.ts"
+  ]
+}
