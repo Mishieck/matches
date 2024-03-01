@@ -1,3 +1,5 @@
+import { IsMatch } from '../types/match.types.ts';
+
 /**
  * Checks if a value is an instance of a given class.
  *
@@ -12,9 +14,7 @@
  * isInstanceOf(String)('') // false
  * ```
  */
-
-import { IsMatch } from '../types/match.types.ts';
-
-// deno-lint-ignore ban-types
-export const isInstanceOf: IsMatch<Function> = Constructor => value =>
-  value instanceof Constructor;
+export const isInstanceOf: IsMatch<
+  // deno-lint-ignore ban-types
+  Function
+> = Constructor => value => value instanceof Constructor;
