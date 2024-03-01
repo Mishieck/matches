@@ -3,6 +3,7 @@
  *
  * A library for checking the nature of JavaScript values.
  *
+ * @example
  * ```ts
  * import * as M from 'jsr:@mishieck/matches@0.2';
  *
