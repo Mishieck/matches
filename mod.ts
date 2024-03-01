@@ -5,7 +5,7 @@
  *
  * @example
  * ```ts
- * import * as M from 'jsr:@mishieck/matches@0.2';
+ * import * as M from 'jsr:@mishieck/matches@0.2.1';
  *
  * M.equals(1)(1); // true
  * M.equals(1)(2); // false
