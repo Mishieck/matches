@@ -2,6 +2,7 @@ import { IsMatch, MapOrSet } from '../types/match.types.ts';
 
 /**
  * Checks if a `Map` or `Set` has a given maximum size.
+ *
  * @param size - The size to test against.
  * @returns a function that takes a `Map` or `Set` and checks if it has a size
  *   that is at most the given size.

@@ -2,6 +2,7 @@ import { IsMatch, MapOrSet } from '../types/match.types.ts';
 
 /**
  * Checks if an `Iterable` has a given item.
+ *
  * @param value - The value to check for in the `Iterable`.
  * @returns a function that takes an `Iterable` and checks if the given value
  *   is the `Iterable`.
