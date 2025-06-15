@@ -25,7 +25,8 @@ bun x jsr add @mishieck/matches
 ## Usage
 
 ```ts
-import * as M from 'jsr:@mishieck/matches@0.2.2';
+import * as M from 'jsr:@mishieck/matches@0.2.2'; // Deno
+// import * as M from '@mishieck/matches'; // Node or Bun
 
 M.equals(1)(1); // true
 M.equals(1)(2); // false
