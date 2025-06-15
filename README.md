@@ -1,6 +1,6 @@
 # MatchES
 
-A TypeScript library for pattern matching using curried predicates.
+A TypeScript library of curried predicates for pattern matching.
 
 ## addation
 
@@ -25,7 +25,7 @@ bun x jsr add @mishieck/matches
 ## Usage
 
 ```ts
-import  as M from 'jsr:@mishieck/matches@0.2.2';
+import * as M from 'jsr:@mishieck/matches@0.2.2';
 
 M.equals(1)(1); // true
 M.equals(1)(2); // false
