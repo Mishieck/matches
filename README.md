@@ -39,3 +39,7 @@ M.contains(1)([2, 3]); // false
 M.not(M.equals(1))(2); // true
 M.not(M.equals(1))(1); // false
 ```
+
+## Contributing
+
+Contributions are welcome.
