@@ -2,7 +2,7 @@
 
 A TypeScript library of curried predicates for pattern matching.
 
-## addation
+## Installation
 
 ### Deno
 
