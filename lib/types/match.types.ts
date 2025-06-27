@@ -7,14 +7,14 @@ export type Compare<Second = unknown> = (second: Second) => boolean;
 
 /** The types that are returned by `typeof` operator */
 export type DataType =
-  | 'bigint'
-  | 'boolean'
-  | 'function'
-  | 'object'
-  | 'number'
-  | 'string'
-  | 'symbol'
-  | 'undefined';
+  | "bigint"
+  | "boolean"
+  | "function"
+  | "object"
+  | "number"
+  | "string"
+  | "symbol"
+  | "undefined";
 
 /** Data type that can be used in inequality checks like `first < second` */
 export type Inequable = number | bigint | string;
@@ -29,9 +29,9 @@ export type Collection<Item = unknown> = ArrayLike<Item> | MapOrSet;
  * Checks if the second value matches the constraints specified in first value
  *
  * @param first - The value that specifies the constraints
- * */
+ */
 export type IsMatch<First = unknown, Second = unknown> = (
-  first: First
+  first: First,
 ) => Compare<Second>;
 
 /**
@@ -42,3 +42,11 @@ export type IsMatchOne<Value = unknown> = () => Compare<Value>;
 
 /** Checks values that are of the same type */
 export type IsMatchSame<Type = unknown> = (first: Type) => Compare<Type>;
+
+/**
+ * An N-ary higher order predicate. It matches a value against predicates in a
+ * list.
+ */
+export type NaryHigherOrderPredicate = <Input = unknown>(
+  matchList: Array<ReturnType<IsMatch<unknown, Input>>>,
+) => Compare<Input>;
