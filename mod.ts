@@ -60,3 +60,5 @@ export * from "./lib/is-array-like/is-array-like.ts";
 export * from "./lib/each-one/each-one.ts";
 export * from "./lib/is-string/is-string.ts";
 export * from "./lib/is-empty/is-empty.ts";
+export * from "./lib/or/or.ts";
+export * from "./lib/and/and.ts";

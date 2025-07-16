@@ -1,6 +1,6 @@
 {
   "name": "@mishieck/matches",
-  "version": "0.3.2",
+  "version": "0.4.2",
   "exports": "./mod.ts",
   "tasks": {
     "test": "deno run --allow-read --allow-env scripts/run-tests.ts",
