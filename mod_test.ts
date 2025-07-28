@@ -1,5 +1,5 @@
 import { describe } from "@std/testing";
-import * as M from "jsr:@mishieck/matches@0.2.2";
+import * as M from "jsr:@mishieck/matches@0.4.3";
 
 describe("mod", () => {
   M.equals(1)(1); // true
